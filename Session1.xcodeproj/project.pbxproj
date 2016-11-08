@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5045DBFA1DCE5ABE00AAB5CE /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5045DBF91DCE5ABE00AAB5CE /* GameScene.sks */; };
+		50B20ED11DD22575000836C7 /* player_image in Resources */ = {isa = PBXBuildFile; fileRef = 50B20ED01DD22575000836C7 /* player_image */; };
 		50DFC6E71DCE5506008898B0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DFC6E61DCE5506008898B0 /* AppDelegate.swift */; };
 		50DFC6ED1DCE5507008898B0 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DFC6EC1DCE5507008898B0 /* GameScene.swift */; };
 		50DFC6EF1DCE5507008898B0 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DFC6EE1DCE5507008898B0 /* GameViewController.swift */; };
@@ -18,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		5045DBF91DCE5ABE00AAB5CE /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		50B20ED01DD22575000836C7 /* player_image */ = {isa = PBXFileReference; lastKnownFileType = folder; path = player_image; sourceTree = "<group>"; };
 		50DFC6E31DCE5506008898B0 /* Session1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Session1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50DFC6E61DCE5506008898B0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		50DFC6EC1DCE5507008898B0 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 				50DFC6F31DCE5508008898B0 /* Assets.xcassets */,
 				50DFC6F51DCE5508008898B0 /* LaunchScreen.storyboard */,
 				50DFC6F81DCE5508008898B0 /* Info.plist */,
+				50B20ED01DD22575000836C7 /* player_image */,
 			);
 			path = Session1;
 			sourceTree = "<group>";
@@ -130,6 +133,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50B20ED11DD22575000836C7 /* player_image in Resources */,
 				5045DBFA1DCE5ABE00AAB5CE /* GameScene.sks in Resources */,
 				50DFC6F21DCE5508008898B0 /* Main.storyboard in Resources */,
 				50DFC6F41DCE5508008898B0 /* Assets.xcassets in Resources */,

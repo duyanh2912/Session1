@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "BFBFAAC5DA25CCB589EBDCCA25D4714E4715B8E7",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "BFBFAAC5DA25CCB589EBDCCA25D4714E4715B8E7" : 9223372036854775807,
+    "A1C0A642D4CDE667F2DD3C97CE497740A03382CF" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "E7E79C12-C84E-4ACA-BF98-53D5A29E97F0",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "BFBFAAC5DA25CCB589EBDCCA25D4714E4715B8E7" : "Session1\/",
+    "A1C0A642D4CDE667F2DD3C97CE497740A03382CF" : "Session1\/Session1\/ios6-ci\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Session1",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Session1.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/qhuydtvt\/ios6-ci.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A1C0A642D4CDE667F2DD3C97CE497740A03382CF"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/duyanh2912\/Session1.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "BFBFAAC5DA25CCB589EBDCCA25D4714E4715B8E7"
+    }
+  ]
+}
