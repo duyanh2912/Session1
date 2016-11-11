@@ -11,6 +11,10 @@ import Foundation
 class GameoverScene: SKScene {
     var replayLabel: SKLabelNode!
     
+    deinit {
+        print("bye GameOver Scene")
+    }
+    
     override func didMove(to view: SKView) {
         let gameoverLabel = childNode(withName: "gameoverLabel") as! SKLabelNode
         gameoverLabel.position = frame.middePoint()

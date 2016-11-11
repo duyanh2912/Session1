@@ -10,12 +10,16 @@ import Foundation
 import SpriteKit
 
 class EnemyBulletController: BulletController {
-    var view = SKSpriteNode(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-round")))
+    var view = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-round")))
     var SPEED: CGFloat = 200
-    var parent: SKNode!
-    var plane: SKSpriteNode!
+    weak var parent: SKNode!
+    weak var plane: SKSpriteNode!
     
     required init() {}
+    
+    deinit {
+        print("bye Enemy Bullet Controller")
+    }
     
     func configProperties() {
         view.name = "enemy_bullet"
@@ -39,5 +43,4 @@ class EnemyBulletController: BulletController {
         )
         view.run(.sequence([moveToBottomAction, SKAction.removeFromParent()]))
     }
-
 }

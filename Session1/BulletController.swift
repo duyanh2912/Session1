@@ -9,10 +9,10 @@ import SpriteKit
 import Foundation
 
 protocol BulletController {
-    var view: SKSpriteNode { get }
-    var SPEED: CGFloat { get }
-    var parent: SKNode! { get set }
-    var plane: SKSpriteNode! { get set }
+    var view: View { get }
+    var SPEED: CGFloat { get set }
+    weak var parent: SKNode! { get set }
+    weak var plane: SKSpriteNode! { get set }
     
     init()
     
@@ -34,5 +34,15 @@ extension BulletController {
         view.physicsBody = SKPhysicsBody(texture: view.texture!, size: view.size)
         configBitMask()
         
+        // Config Bullet's onContact
+        configOnContact()
+        
+    }
+    
+    func configOnContact() {
+        let bullet = self.view
+        bullet.onContact = { [unowned bullet] other in
+            bullet.removeFromParent()
+        }
     }
 }

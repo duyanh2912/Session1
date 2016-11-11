@@ -9,12 +9,16 @@
 import SpriteKit
 
 class PlayerBulletController: BulletController {
-    var view = SKSpriteNode(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-double")))
+    var view = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-double")))
     var SPEED: CGFloat = 300
-    var parent: SKNode!
-    var plane: SKSpriteNode!
+    weak var parent: SKNode!
+    weak var plane: SKSpriteNode!
     
     required init() {}
+    
+    deinit {
+        print("bye Player Bullet Controller")
+    }
     
     func configProperties() {
         view.name = "player_bullet"
@@ -36,6 +40,7 @@ class PlayerBulletController: BulletController {
             parent: parent,
             speed: SPEED
         )
+        
         view.run(.sequence([moveToTopAction, SKAction.removeFromParent()]))
     }
 }

@@ -25,11 +25,28 @@ extension CGPoint {
         return sqrt(dx * dx + dy * dy)
     }
     
+    func positionRelative(to node: SKNode) -> CGPoint {
+        let x = self.x - node.position.x
+        let y = self.y - node.position.y
+        
+        return CGPoint(x: x, y: y)
+    }
+    
 }
 
 extension CGRect {
     func middePoint() -> CGPoint {
         return CGPoint(x: self.midX, y:self.midY)
+    }
+}
+
+extension CGSize {
+    func add(dWidth: CGFloat, dHeight: CGFloat) -> CGSize {
+        return CGSize(width: self.width + dWidth, height: self.height + dHeight)
+    }
+    
+    func scaled(by ratio: CGFloat) -> CGSize {
+        return CGSize(width: self.width * ratio, height: self.height * ratio)
     }
 }
 
@@ -47,4 +64,27 @@ extension SKAction {
         
         return SKAction.moveTo(y: -node.size.height / 2, duration: Double(time))
     }
+    
+    static func moveDiagonallyToBottomRigt(node: SKSpriteNode, parent: SKNode, speed: CGFloat) -> SKAction {
+        let endingY = -node.size.height / 2
+        let endingX = node.position.x + (node.position.y - endingY)
+        
+        let destination = CGPoint(x: endingX, y: endingY)
+        let distance = destination.distance(to: node.position)
+        let time = distance/speed
+        
+        return SKAction.move(to: destination, duration: Double(time))
+    }
+    
+    static func moveDiagonallyToBottomLeft(node: SKSpriteNode, parent: SKNode, speed: CGFloat) -> SKAction {
+        let endingY = -node.size.height / 2
+        let endingX = node.position.x - (node.position.y - endingY)
+        
+        let destination = CGPoint(x: endingX, y: endingY)
+        let distance = destination.distance(to: node.position)
+        let time = distance/speed
+        
+        return SKAction.move(to: destination, duration: Double(time))
+    }
+
 }
