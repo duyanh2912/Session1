@@ -11,10 +11,22 @@ import GameKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerController: PlayerController!
+    var explosionController: ExplosionController!
+    var soundController: SoundController!
+    
     var hpLabel: SKLabelNode!
     var hpLabelBlock: SKSpriteNode!
     
-    let TIME_BETWEEN_SPAWN: Double = 3
+    var score = 0 {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
+            scoreLabelBlock.size = scoreLabel.frame.size.add(dWidth: 6, dHeight: 6)
+        }
+    }
+    var scoreLabel: SKLabelNode!
+    var scoreLabelBlock: SKSpriteNode!
+    
+    let TIME_BETWEEN_SPAWN: Double = 1.5
     
     deinit {
         print("bye Game Scene")
@@ -26,6 +38,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addPlayer()
         addEnemies()
         addHpLabel()
+        addScoreLabel()
+        addExplosionController()
+        addSoundController()
+    }
+    
+    func addSoundController() {
+        soundController = SoundController(parent: self)
+    }
+    
+    func addExplosionController() {
+        explosionController = ExplosionController(parent: self)
+    }
+    
+    func addScoreLabel() {
+        scoreLabel = SKLabelNode(text: "Score: 0")
+        scoreLabel.horizontalAlignmentMode = .right
+        scoreLabel.position = CGPoint(x: self.size.width - 8, y: 8)
+        scoreLabel.zPosition = 2
+        addChild(scoreLabel)
+        
+        scoreLabelBlock = SKSpriteNode(
+            color: .black,
+            size: scoreLabel.frame.size.add(dWidth: 6, dHeight: 6)
+        )
+        scoreLabelBlock.zPosition = 2
+        scoreLabelBlock.alpha = 0.3
+        scoreLabelBlock.anchorPoint = CGPoint(x: 1, y: 0)
+        scoreLabelBlock.position = scoreLabel.position.add(x: 3, y: -3)
+        addChild(scoreLabelBlock)
     }
     
     func addHpLabel() {
@@ -80,43 +121,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func addPlayer() {
         playerController = PlayerController(parent: self)
-        let player = playerController.view
-        addChild(player)
-        playerController.runAction()
+        playerController.view = View(imageNamed: "player_image/plane4")
+        playerController.FIRING_INTERVAL = 0.2
+        playerController.config()
     
-        // chặn không cho máy bay ra khỏi màn hình
-        let rangeX = SKRange(lowerLimit: 0, upperLimit: size.width)
-        let rangeY = SKRange(lowerLimit: 0, upperLimit: size.height)
-        let constraint = SKConstraint.positionX(rangeX, y: rangeY)
-        player.constraints = [constraint]
     }
     
     func addEnemies() {
         let add = SKAction.run { [unowned self] in
-            let enemyController = EnemyController(parent: self)
-            self.addChild(enemyController.view)
-            enemyController.runAction()
+            let enemyController: PlaneController
+            
+            let i = Int(arc4random_uniform(UInt32(EnemyType.types.count)))
+            switch EnemyType.types[i] {
+                
+            case EnemyType.enemy_green_1:
+                enemyController = EnemyDiagonalController(isFromLeft: true, parent: self)
+            
+            case EnemyType.enemy_green_2:
+                enemyController = EnemyDiagonalController(isFromLeft: false, parent: self)
+            
+            case EnemyType.enemy_plane_white_animated, EnemyType.enemy_plane_yellow_animated:
+                enemyController = EnemyAnimatedController(imageName: EnemyType.types[i].rawValue, parent: self)
+                
+            default:
+                enemyController = EnemyController(parent: self)
+            }
+            
+            enemyController.config()
         }
-        
         let delay = SKAction.wait(forDuration: TIME_BETWEEN_SPAWN)
-        
         self.run(.repeatForever(.sequence([add, delay])))
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let touch = touches.first {
-            let location = touch.location(in: self)
-            let previous = touch.previousLocation(in: self)
-            
-            let dx = location.x - previous.x
-            let dy = location.y - previous.y
-            
-            let vector = CGVector(dx: dx, dy: dy)
-            
-            let distance = location.distance(to: previous)
-            let time = Double(distance / playerController.SPEED)
-            
-            playerController.view.run(.move(by: vector, duration: time))
-        }
+        playerController.move(touches: touches)
     }
 }

@@ -9,10 +9,10 @@ import SpriteKit
 import Foundation
 
 class EnemyController: PlaneController {
-    var view: View = View(imageNamed: "enemy-green-3")
-    var SPEED: CGFloat!
-    weak var parent: SKNode!
-    var FIRING_INTERVAL: Double!
+    var view: View! = View(texture: SKTexture(image: #imageLiteral(resourceName: "plane1")))
+    var SPEED: CGFloat! = 80
+    weak var parent: SKScene!
+    var FIRING_INTERVAL: Double! = 1
     
     required init() {}
     
@@ -21,9 +21,6 @@ class EnemyController: PlaneController {
     }
     
     func configProperties() {
-        SPEED = 80
-        FIRING_INTERVAL = 1
-        
         view.name = "enemy"
         
         let beginX = CGFloat(drand48() * Double(parent.frame.width))
@@ -46,10 +43,9 @@ class EnemyController: PlaneController {
         let plane = self.view
         let scene = self.parent
         
-        let addBullet = SKAction.run { [unowned plane, weak scene] in
-            let bulletController = EnemyBulletController(plane: plane, parent: scene!)
-            scene?.addChild(bulletController.view)
-            bulletController.runAction()
+        let addBullet = SKAction.run { [weak plane, weak scene] in
+            let bulletController = EnemyBulletController(plane: plane!, parent: scene!)
+            bulletController.config()
         }
         let delay = SKAction.wait(forDuration: self.FIRING_INTERVAL)
         
@@ -58,13 +54,12 @@ class EnemyController: PlaneController {
     
     func configOnContact() {
         let plane = self.view
-        let scene = self.parent
-        plane.onContact = { [unowned plane, weak scene] other in
-            let explosionController = ExplosionController(at: plane.position)
-            plane.removeFromParent()
-            scene?.addChild(explosionController.view)
-            explosionController.explode()
+        let scene = self.parent as? GameScene
+        plane?.onContact = { [weak plane, weak scene] other in
+            plane?.removeFromParent()
+            scene?.explosionController.explode(at: plane!)
+            scene?.score += 1
         }
     }
-
+    
 }

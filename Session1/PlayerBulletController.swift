@@ -9,10 +9,10 @@
 import SpriteKit
 
 class PlayerBulletController: BulletController {
-    var view = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-double")))
-    var SPEED: CGFloat = 300
+    var bullet: View! = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-double")))
+    var SPEED: CGFloat! = 300
     weak var parent: SKNode!
-    weak var plane: SKSpriteNode!
+    weak var plane: View!
     
     required init() {}
     
@@ -21,26 +21,28 @@ class PlayerBulletController: BulletController {
     }
     
     func configProperties() {
-        view.name = "player_bullet"
-        view.position = plane.position.add(
+        bullet.name = "player_bullet"
+        bullet.position = plane.position.add(
             x: 0,
-            y: plane.size.height / 2 + view.size.height / 2)
+            y: plane.height / 2 + self.height / 2)
     }
     
     func configBitMask() {
-        view.physicsBody?.categoryBitMask = BitMask.playerBullet.rawValue
-        view.physicsBody?.contactTestBitMask = BitMask.enemy.rawValue
-        view.physicsBody?.collisionBitMask = 0
+        bullet.physicsBody?.categoryBitMask = BitMask.playerBullet.rawValue
+        bullet.physicsBody?.contactTestBitMask = BitMask.enemy.rawValue
+        bullet.physicsBody?.collisionBitMask = 0
     }
     
     func runAction() {
         // Action
         let moveToTopAction = SKAction.moveToTop(
-            node: view,
+            node: bullet,
             parent: parent,
             speed: SPEED
         )
         
-        view.run(.sequence([moveToTopAction, SKAction.removeFromParent()]))
+        bullet.run(.sequence([moveToTopAction, SKAction.removeFromParent()]))
+        let soundController = (parent as! GameScene).soundController
+        soundController?.playSound(sound: (SoundController.PLAYER_SHOOT))
     }
 }

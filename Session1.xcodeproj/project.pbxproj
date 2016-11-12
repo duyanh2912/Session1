@@ -17,8 +17,12 @@
 		504BE2FA1DD579A700D8BD3E /* PlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504BE2F91DD579A700D8BD3E /* PlayerController.swift */; };
 		504BE2FC1DD579E600D8BD3E /* PlaneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504BE2FB1DD579E600D8BD3E /* PlaneController.swift */; };
 		504BE2FE1DD5824800D8BD3E /* EnemyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504BE2FD1DD5824800D8BD3E /* EnemyController.swift */; };
+		505FF9BB1DD76E050008B13A /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505FF9BA1DD76E050008B13A /* Controller.swift */; };
+		505FF9BE1DD780620008B13A /* SoundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505FF9BD1DD780620008B13A /* SoundController.swift */; };
 		506FF5871DD4C54200D1BA12 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506FF5861DD4C54200D1BA12 /* Constants.swift */; };
 		50B20ED11DD22575000836C7 /* player_image in Resources */ = {isa = PBXBuildFile; fileRef = 50B20ED01DD22575000836C7 /* player_image */; };
+		50D123D01DD71460000B423F /* EnemyDiagonalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D123CF1DD71460000B423F /* EnemyDiagonalController.swift */; };
+		50D123D41DD7286A000B423F /* EnemyAnimatedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D123D31DD7286A000B423F /* EnemyAnimatedController.swift */; };
 		50DFC6E71DCE5506008898B0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DFC6E61DCE5506008898B0 /* AppDelegate.swift */; };
 		50DFC6ED1DCE5507008898B0 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DFC6EC1DCE5507008898B0 /* GameScene.swift */; };
 		50DFC6EF1DCE5507008898B0 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50DFC6EE1DCE5507008898B0 /* GameViewController.swift */; };
@@ -42,8 +46,12 @@
 		504BE2F91DD579A700D8BD3E /* PlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerController.swift; sourceTree = "<group>"; };
 		504BE2FB1DD579E600D8BD3E /* PlaneController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaneController.swift; sourceTree = "<group>"; };
 		504BE2FD1DD5824800D8BD3E /* EnemyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnemyController.swift; sourceTree = "<group>"; };
+		505FF9BA1DD76E050008B13A /* Controller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
+		505FF9BD1DD780620008B13A /* SoundController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundController.swift; sourceTree = "<group>"; };
 		506FF5861DD4C54200D1BA12 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		50B20ED01DD22575000836C7 /* player_image */ = {isa = PBXFileReference; lastKnownFileType = folder; path = player_image; sourceTree = "<group>"; };
+		50D123CF1DD71460000B423F /* EnemyDiagonalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnemyDiagonalController.swift; sourceTree = "<group>"; };
+		50D123D31DD7286A000B423F /* EnemyAnimatedController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnemyAnimatedController.swift; sourceTree = "<group>"; };
 		50DFC6E31DCE5506008898B0 /* Session1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Session1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50DFC6E61DCE5506008898B0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		50DFC6EC1DCE5507008898B0 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -72,14 +80,11 @@
 		5005A1C21DD4BF9B006FBDD6 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				5005A1C31DD4BFF2006FBDD6 /* PlayerBulletController.swift */,
-				50F585C11DD4E2BE00649E8C /* BulletController.swift */,
-				50F585C31DD4F01800649E8C /* EnemyBulletController.swift */,
-				504BE2F41DD5699800D8BD3E /* EnemyDiagonalBulletController.swift */,
-				504BE2F91DD579A700D8BD3E /* PlayerController.swift */,
-				504BE2FD1DD5824800D8BD3E /* EnemyController.swift */,
-				504BE2FB1DD579E600D8BD3E /* PlaneController.swift */,
-				504AA3231DD624B8006C337E /* ExplosionController.swift */,
+				505FF9BA1DD76E050008B13A /* Controller.swift */,
+				505FF9BC1DD7803D0008B13A /* Sound Controller */,
+				50D123D51DD72B18000B423F /* Explosion Controller */,
+				50D123D21DD72829000B423F /* Plane Controllers */,
+				50D123D11DD727FF000B423F /* Bullet Controllers */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -93,12 +98,51 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		505FF9BC1DD7803D0008B13A /* Sound Controller */ = {
+			isa = PBXGroup;
+			children = (
+				505FF9BD1DD780620008B13A /* SoundController.swift */,
+			);
+			name = "Sound Controller";
+			sourceTree = "<group>";
+		};
 		506FF5851DD4C52400D1BA12 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
 				506FF5861DD4C54200D1BA12 /* Constants.swift */,
 			);
 			name = Constants;
+			sourceTree = "<group>";
+		};
+		50D123D11DD727FF000B423F /* Bullet Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				5005A1C31DD4BFF2006FBDD6 /* PlayerBulletController.swift */,
+				50F585C11DD4E2BE00649E8C /* BulletController.swift */,
+				50F585C31DD4F01800649E8C /* EnemyBulletController.swift */,
+				504BE2F41DD5699800D8BD3E /* EnemyDiagonalBulletController.swift */,
+			);
+			name = "Bullet Controllers";
+			sourceTree = "<group>";
+		};
+		50D123D21DD72829000B423F /* Plane Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				504BE2F91DD579A700D8BD3E /* PlayerController.swift */,
+				504BE2FD1DD5824800D8BD3E /* EnemyController.swift */,
+				50D123CF1DD71460000B423F /* EnemyDiagonalController.swift */,
+				504BE2FB1DD579E600D8BD3E /* PlaneController.swift */,
+				50D123D31DD7286A000B423F /* EnemyAnimatedController.swift */,
+			);
+			name = "Plane Controllers";
+			sourceTree = "<group>";
+		};
+		50D123D51DD72B18000B423F /* Explosion Controller */ = {
+			isa = PBXGroup;
+			children = (
+				504AA3231DD624B8006C337E /* ExplosionController.swift */,
+			);
+			name = "Explosion Controller";
 			sourceTree = "<group>";
 		};
 		50DFC6DA1DCE5505008898B0 = {
@@ -219,12 +263,16 @@
 				50F585C41DD4F01800649E8C /* EnemyBulletController.swift in Sources */,
 				504BE2F51DD5699800D8BD3E /* EnemyDiagonalBulletController.swift in Sources */,
 				504BE2FA1DD579A700D8BD3E /* PlayerController.swift in Sources */,
+				50D123D41DD7286A000B423F /* EnemyAnimatedController.swift in Sources */,
 				50DFC6ED1DCE5507008898B0 /* GameScene.swift in Sources */,
 				50DFC6EF1DCE5507008898B0 /* GameViewController.swift in Sources */,
 				504BE2FC1DD579E600D8BD3E /* PlaneController.swift in Sources */,
+				505FF9BB1DD76E050008B13A /* Controller.swift in Sources */,
 				50DFC6E71DCE5506008898B0 /* AppDelegate.swift in Sources */,
 				5005A1C41DD4BFF2006FBDD6 /* PlayerBulletController.swift in Sources */,
+				505FF9BE1DD780620008B13A /* SoundController.swift in Sources */,
 				50F585CA1DD4F56700649E8C /* GameoverScene.swift in Sources */,
+				50D123D01DD71460000B423F /* EnemyDiagonalController.swift in Sources */,
 				5005A1C11DD4A859006FBDD6 /* Utils.swift in Sources */,
 				504AA3241DD624B8006C337E /* ExplosionController.swift in Sources */,
 				504BE2FE1DD5824800D8BD3E /* EnemyController.swift in Sources */,

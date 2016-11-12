@@ -13,13 +13,11 @@ typealias OnContactType = ((_ other: View, _ contact: SKPhysicsContact) -> Void)
 class View: SKSpriteNode {
     
     var onContact : OnContactType?
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    var width: CGFloat {
+        return self.size.width
     }
-    
-    override init(texture: SKTexture?, color: UIColor, size: CGSize) {
-        super.init(texture: texture, color: color, size: size)
+    var height: CGFloat {
+        return self.size.height
     }
     
     deinit {

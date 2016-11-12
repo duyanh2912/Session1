@@ -10,10 +10,11 @@ import Foundation
 import SpriteKit
 
 class EnemyBulletController: BulletController {
-    var view = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-round")))
-    var SPEED: CGFloat = 200
+    var bullet: View! = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-round")))
+    var SPEED: CGFloat! = 200
     weak var parent: SKNode!
-    weak var plane: SKSpriteNode!
+    weak var plane: View!
+    var isTargetingPlayer = false
     
     required init() {}
     
@@ -22,25 +23,27 @@ class EnemyBulletController: BulletController {
     }
     
     func configProperties() {
-        view.name = "enemy_bullet"
-        view.position = plane.position.add(
+        bullet.name = "enemy_bullet"
+        bullet.position = plane.position.add(
             x: 0,
-            y: -plane.size.height / 2 - view.size.height / 2)
+            y: -plane.height / 2 - self.height / 2)
     }
     
     func configBitMask() {
-        view.physicsBody?.categoryBitMask = BitMask.enemyBullet.rawValue
-        view.physicsBody?.contactTestBitMask = BitMask.player.rawValue
-        view.physicsBody?.collisionBitMask = 0
+        bullet.physicsBody?.categoryBitMask = BitMask.enemyBullet.rawValue
+        bullet.physicsBody?.contactTestBitMask = BitMask.player.rawValue
+        bullet.physicsBody?.collisionBitMask = 0
     }
     
     func runAction() {
         // Action
         let moveToBottomAction = SKAction.moveToBottom(
-            node: view,
+            node: bullet,
             parent: parent,
             speed: SPEED
         )
-        view.run(.sequence([moveToBottomAction, SKAction.removeFromParent()]))
+        bullet.run(.sequence([moveToBottomAction, SKAction.removeFromParent()]))
+        let soundController = (parent as! GameScene).soundController
+        soundController?.playSound(sound: (SoundController.ENEMY_SHOOT))
     }
 }
