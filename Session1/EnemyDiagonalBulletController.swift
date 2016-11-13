@@ -15,7 +15,7 @@ class EnemyDiagonalBulletController: EnemyBulletController {
         print("bye Enemy Diagonal Bullet Controller")
     }
     
-    init(isFromLeft: Bool, plane: View, parent: SKNode) {
+    init(isFromLeft: Bool, plane: View, parent: SKScene) {
         super.init()
         self.isFromLeft = isFromLeft
         self.plane = plane
@@ -25,27 +25,27 @@ class EnemyDiagonalBulletController: EnemyBulletController {
     required init() {}
     
     override func configProperties() {
-        bullet.name = "enemy_bullet"
+        view.name = "enemy_bullet"
         switch isFromLeft {
         case true:
-            bullet.position = plane.position.add(
-                x: plane.width / 2 + bullet.width / 2,
-                y: -plane.height / 2 - bullet.height / 2
+            view.position = plane.position.add(
+                x: plane.width / 2 + view.width / 2,
+                y: -plane.height / 2 - view.height / 2
             )
             
         case false:
-            bullet.position = plane.position.add(
-                x: -plane.width / 2 - bullet.width / 2,
-                y: -plane.height / 2 - bullet.height / 2
+            view.position = plane.position.add(
+                x: -plane.width / 2 - view.width / 2,
+                y: -plane.height / 2 - view.height / 2
             )
         }
     }
     
-    override func runAction() {
+    override func configPhysics() {
         let action: SKAction
         if isTargetingPlayer {
             action = SKAction.shootToTarget(
-                node: bullet,
+                node: view,
                 target: (parent as! GameScene).playerController.view,
                 parent: parent,
                 speed: SPEED
@@ -53,13 +53,13 @@ class EnemyDiagonalBulletController: EnemyBulletController {
         } else {
             switch isFromLeft {
             case true:
-                action = SKAction.moveDiagonallyToBottomRigt(node: bullet, speed: SPEED)
+                action = SKAction.moveDiagonallyToBottomRigt(node: view, speed: SPEED)
                 
             case false:
-                action = SKAction.moveDiagonallyToBottomLeft(node: bullet, speed: SPEED)
+                action = SKAction.moveDiagonallyToBottomLeft(node: view, speed: SPEED)
             }
         }
-        bullet.run(.repeatForever(.sequence([action, SKAction.removeFromParent()])))
+        view.run(.repeatForever(.sequence([action, SKAction.removeFromParent()])))
         parent.run(SKAction.playSoundFileNamed("enemy_shoot", waitForCompletion: false))
         print(SPEED)
     }

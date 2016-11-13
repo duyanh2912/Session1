@@ -19,7 +19,17 @@ protocol Controller {
 }
 
 extension Controller {
-   func config() {
+    var width: CGFloat {
+        get {
+            return self.view.width
+        }
+    }
+    var height: CGFloat {
+        get {
+            return self.view.height
+        }
+    }
+    func config() {
         configProperties()
         configPhysics()
         configActions()

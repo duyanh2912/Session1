@@ -8,32 +8,17 @@
 import SpriteKit
 import Foundation
 
-protocol BulletController {
-    var bullet: View! { get set }
+protocol BulletController: Controller {
+    var view: View! { get set }
     var SPEED: CGFloat! { get set }
-    weak var parent: SKNode! { get set }
+    weak var parent: SKScene! { get set }
     weak var plane: View! { get set }
     
     init()
-    
-    func configProperties()
-    func configBitMask()
-    func runAction()
   }
 
 extension BulletController {
-    var width: CGFloat {
-        get {
-            return self.bullet.width
-        }
-    }
-    var height: CGFloat {
-        get {
-            return self.bullet.height
-        }
-    }
-    
-    init(plane: View, parent: SKNode) {
+    init(plane: View, parent: SKScene) {
         self.init()
         self.plane = plane
         self.parent = parent
@@ -44,27 +29,22 @@ extension BulletController {
         configProperties()
         
         // Physics
-        bullet.physicsBody = SKPhysicsBody(texture: bullet.texture!, size: bullet.size)
-        configBitMask()
+        view.physicsBody = SKPhysicsBody(texture: view.texture!, size: view.size)
+        configPhysics()
         
         // Action
-        runAction()
+        configActions()
         
         // On Contact
         configOnContact()
         
-        parent.addChild(bullet)
+        parent.addChild(view)
     }
     
     func configOnContact() {
-        let bullet = self.bullet!
+        let bullet = self.view!
         bullet.onContact = { [unowned bullet] other in
             bullet.removeFromParent()
         }
-    }
-    
-    init(bulletImage: UIImage, plane: View, parent: SKScene){
-        self.init(plane: plane, parent: parent)
-        self.bullet = View(texture: SKTexture(image: bulletImage))
     }
 }

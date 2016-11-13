@@ -49,7 +49,6 @@ class EnemyController: PlaneController {
         view?.physicsBody?.categoryBitMask = BitMask.enemy.rawValue
         view?.physicsBody?.contactTestBitMask = BitMask.playerBullet.rawValue
         view?.physicsBody?.collisionBitMask = 0
-        view?.physicsBody?.usesPreciseCollisionDetection = true
     }
     
     func flyAction() {

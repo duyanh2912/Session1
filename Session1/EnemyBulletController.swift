@@ -10,9 +10,9 @@ import Foundation
 import SpriteKit
 
 class EnemyBulletController: BulletController {
-    var bullet: View! = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-round")))
+    var view: View! = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-round")))
     var SPEED: CGFloat! = 300
-    weak var parent: SKNode!
+    weak var parent: SKScene!
     weak var plane: View!
     var isTargetingPlayer = false
     
@@ -23,35 +23,35 @@ class EnemyBulletController: BulletController {
     }
     
     func configProperties() {
-        bullet.name = "enemy_bullet"
-        bullet.position = plane.position.add(
+        view.name = "enemy_bullet"
+        view.position = plane.position.add(
             x: 0,
             y: -plane.height / 2 - self.height / 2)
     }
     
-    func configBitMask() {
-        bullet.physicsBody?.categoryBitMask = BitMask.enemyBullet.rawValue
-        bullet.physicsBody?.contactTestBitMask = BitMask.player.rawValue | BitMask.wall.rawValue
-        bullet.physicsBody?.collisionBitMask = 0
+    func configPhysics() {
+        view.physicsBody?.categoryBitMask = BitMask.enemyBullet.rawValue
+        view.physicsBody?.contactTestBitMask = BitMask.player.rawValue | BitMask.wall.rawValue
+        view.physicsBody?.collisionBitMask = 0
     }
     
-    func runAction() {
+    func configActions() {
         // Action
         let action: SKAction
         if !isTargetingPlayer {
             action = SKAction.moveToBottom(
-                node: bullet,
+                node: view,
                 speed: SPEED
             )
         } else {
             action = SKAction.shootToTarget(
-                node: bullet,
+                node: view,
                 target: (parent as! GameScene).playerController.view,
                 parent: parent,
                 speed: SPEED
             )
         }
-        bullet.run(.sequence([action, .removeFromParent()]))
+        view.run(.sequence([action, .removeFromParent()]))
         self.parent.run(SoundController.ENEMY_SHOOT)
     }
 }
