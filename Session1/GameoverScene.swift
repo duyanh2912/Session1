@@ -10,9 +10,6 @@ import Foundation
 
 class GameoverScene: SKScene {
     var replayLabel: SKLabelNode!
-//    var gameOverSound: SKAction {
-//        return SKAction.playSoundFileNamed("game_over", waitForCompletion: false)
-//    }
     
     deinit {
         print("bye GameOver Scene")
@@ -20,7 +17,7 @@ class GameoverScene: SKScene {
     
     override func didMove(to view: SKView) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [unowned self] in
-             self.run(SKAction.playSoundFileNamed("game_over", waitForCompletion: false))
+             self.run(SoundController.GAME_OVER)
         }
        
         let gameoverLabel = childNode(withName: "gameoverLabel") as! SKLabelNode
@@ -34,7 +31,11 @@ class GameoverScene: SKScene {
         addChild(replayLabel)
         
         gameoverLabel.run(SKAction.fadeAlpha(to: 1, duration: 1)) { [unowned self] in
-            self.replayLabel.run(.fadeAlpha(to: 1, duration: 1))
+            self.replayLabel.run(.fadeAlpha(to: 1, duration: 0.4)) {
+                self.replayLabel.run(.repeatForever(.sequence([.fadeAlpha(to: 0.2, duration: 0.4),
+                                                               .fadeAlpha(to: 1, duration: 0.4)
+                    ])))
+            }
         }
         
         print(self.frame)

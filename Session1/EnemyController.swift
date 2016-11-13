@@ -9,56 +9,78 @@ import SpriteKit
 import Foundation
 
 class EnemyController: PlaneController {
-    var view: View! = View(texture: SKTexture(image: #imageLiteral(resourceName: "plane1")))
-    var SPEED: CGFloat! = 80
+    var texture: SKTexture!
+    var view: View!
+    var SPEED: CGFloat! = 160
     weak var parent: SKScene!
     var FIRING_INTERVAL: Double! = 1
-    
-    required init() {}
+    var isTargetingPlayer = false
     
     deinit {
         print("bye Enemy Controller")
     }
     
     func configProperties() {
-        view.name = "enemy"
+        view?.name = "enemy"
         
         let beginX = CGFloat(drand48() * Double(parent.frame.width))
-        let beginY = parent.frame.height + view.frame.height / 2
+        let beginY = parent.frame.height + (view?.frame.height)! / 2
         view.position = CGPoint(x: beginX, y: beginY)
     }
     
-    func configBitMask() {
-        view.physicsBody?.categoryBitMask = BitMask.enemy.rawValue
-        view.physicsBody?.contactTestBitMask = BitMask.playerBullet.rawValue
-        view.physicsBody?.collisionBitMask = 0
+    init(parent: SKScene) {
+        self.parent = parent
     }
     
-    func runAction() {
+    func set(customImage: UIImage?){
+        if let playerImage = customImage {
+            texture = SKTexture(image: playerImage)
+        }
+        texture = SKTexture(image: #imageLiteral(resourceName: "enemy-green-3"))
+    }
+    
+    func spawnEnemy() {
+        view = View(texture: texture)
+        config()
+        view = nil // phải có dòng này ko thì view sẽ ko dealocate ngay => collide nhiều lần
+    }
+    
+    func configPhysics() {
+        view?.physicsBody?.categoryBitMask = BitMask.enemy.rawValue
+        view?.physicsBody?.contactTestBitMask = BitMask.playerBullet.rawValue
+        view?.physicsBody?.collisionBitMask = 0
+        view?.physicsBody?.usesPreciseCollisionDetection = true
+    }
+    
+    func flyAction() {
         // Fly Action
-        let flyAction = SKAction.moveToBottom(node: view, parent: parent, speed: SPEED)
+        let flyAction = SKAction.moveToBottom(node: view!, speed: SPEED)
         self.view.run(.sequence([flyAction, SKAction.removeFromParent()]))
-        
+    }
+    
+    func shootAction() {
         // Shoot Action
         let plane = self.view
         let scene = self.parent
         
-        let addBullet = SKAction.run { [weak plane, weak scene] in
+        let addBullet = SKAction.run { [weak plane, weak scene, weak self] in
             let bulletController = EnemyBulletController(plane: plane!, parent: scene!)
+            bulletController.isTargetingPlayer = (self?.isTargetingPlayer)!
             bulletController.config()
         }
         let delay = SKAction.wait(forDuration: self.FIRING_INTERVAL)
         
-        self.view.run(.repeatForever(.sequence([addBullet, delay])))
+        self.view?.run(.repeatForever(.sequence([addBullet, delay])))
     }
     
     func configOnContact() {
-        let plane = self.view
-        let scene = self.parent as? GameScene
-        plane?.onContact = { [weak plane, weak scene] other in
-            plane?.removeFromParent()
-            scene?.explosionController.explode(at: plane!)
-            scene?.score += 1
+        let plane = self.view!
+        
+        plane.onContact = { [unowned self, unowned plane] other in
+            plane.removeFromParent()
+            let scene = self.parent as! GameScene
+            scene.explosionController.explode(at: plane)
+            scene.score += 1
         }
     }
     

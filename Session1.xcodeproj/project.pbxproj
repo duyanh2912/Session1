@@ -20,6 +20,8 @@
 		505FF9BB1DD76E050008B13A /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505FF9BA1DD76E050008B13A /* Controller.swift */; };
 		505FF9BE1DD780620008B13A /* SoundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 505FF9BD1DD780620008B13A /* SoundController.swift */; };
 		506FF5871DD4C54200D1BA12 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 506FF5861DD4C54200D1BA12 /* Constants.swift */; };
+		50B097531DD8357E00BE16D5 /* OnContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B097521DD8357E00BE16D5 /* OnContact.swift */; };
+		50B097551DD84F5100BE16D5 /* RandomEnemyGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B097541DD84F5000BE16D5 /* RandomEnemyGenerator.swift */; };
 		50B20ED11DD22575000836C7 /* player_image in Resources */ = {isa = PBXBuildFile; fileRef = 50B20ED01DD22575000836C7 /* player_image */; };
 		50D123D01DD71460000B423F /* EnemyDiagonalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D123CF1DD71460000B423F /* EnemyDiagonalController.swift */; };
 		50D123D41DD7286A000B423F /* EnemyAnimatedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D123D31DD7286A000B423F /* EnemyAnimatedController.swift */; };
@@ -49,6 +51,8 @@
 		505FF9BA1DD76E050008B13A /* Controller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
 		505FF9BD1DD780620008B13A /* SoundController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundController.swift; sourceTree = "<group>"; };
 		506FF5861DD4C54200D1BA12 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		50B097521DD8357E00BE16D5 /* OnContact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnContact.swift; sourceTree = "<group>"; };
+		50B097541DD84F5000BE16D5 /* RandomEnemyGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomEnemyGenerator.swift; sourceTree = "<group>"; };
 		50B20ED01DD22575000836C7 /* player_image */ = {isa = PBXFileReference; lastKnownFileType = folder; path = player_image; sourceTree = "<group>"; };
 		50D123CF1DD71460000B423F /* EnemyDiagonalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnemyDiagonalController.swift; sourceTree = "<group>"; };
 		50D123D31DD7286A000B423F /* EnemyAnimatedController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnemyAnimatedController.swift; sourceTree = "<group>"; };
@@ -94,6 +98,7 @@
 			children = (
 				504BE2F71DD5757300D8BD3E /* View.swift */,
 				504AA3211DD61F4D006C337E /* Fire.sks */,
+				50B097521DD8357E00BE16D5 /* OnContact.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -128,11 +133,12 @@
 		50D123D21DD72829000B423F /* Plane Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				504BE2FB1DD579E600D8BD3E /* PlaneController.swift */,
 				504BE2F91DD579A700D8BD3E /* PlayerController.swift */,
 				504BE2FD1DD5824800D8BD3E /* EnemyController.swift */,
 				50D123CF1DD71460000B423F /* EnemyDiagonalController.swift */,
-				504BE2FB1DD579E600D8BD3E /* PlaneController.swift */,
 				50D123D31DD7286A000B423F /* EnemyAnimatedController.swift */,
+				50B097541DD84F5000BE16D5 /* RandomEnemyGenerator.swift */,
 			);
 			name = "Plane Controllers";
 			sourceTree = "<group>";
@@ -270,6 +276,7 @@
 				505FF9BB1DD76E050008B13A /* Controller.swift in Sources */,
 				50DFC6E71DCE5506008898B0 /* AppDelegate.swift in Sources */,
 				5005A1C41DD4BFF2006FBDD6 /* PlayerBulletController.swift in Sources */,
+				50B097551DD84F5100BE16D5 /* RandomEnemyGenerator.swift in Sources */,
 				505FF9BE1DD780620008B13A /* SoundController.swift in Sources */,
 				50F585CA1DD4F56700649E8C /* GameoverScene.swift in Sources */,
 				50D123D01DD71460000B423F /* EnemyDiagonalController.swift in Sources */,
@@ -279,6 +286,7 @@
 				50F585C21DD4E2BE00649E8C /* BulletController.swift in Sources */,
 				504BE2F81DD5757300D8BD3E /* View.swift in Sources */,
 				506FF5871DD4C54200D1BA12 /* Constants.swift in Sources */,
+				50B097531DD8357E00BE16D5 /* OnContact.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

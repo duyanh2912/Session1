@@ -11,25 +11,32 @@ class EnemyAnimatedController: EnemyController {
     var textures = [SKTexture]()
     var atlas: SKTextureAtlas!
     
-    convenience init(imageName: String, parent: SKScene) {
-        self.init()
-        self.parent = parent
+    func set(customAnimation: String?) {
+        if customAnimation == nil {
+            atlas = SKTextureAtlas(named: "enemy_plane_white")
+        } else {
+            atlas = SKTextureAtlas(named: customAnimation!)
+        }
         
-        atlas = SKTextureAtlas(named: imageName)
         textures = [SKTexture]()
-        
         let textureNamesSorted = atlas.textureNames.sorted()
         for textureName in textureNamesSorted {
             textures.append(atlas.textureNamed(textureName))
         }
+        texture = textures[0]
+    }
+    
+    func configActions() {
         
-        view = View(texture: textures[0])
+        super.configActions()
     }
     
-    override func runAction() {
-        view.run(.repeatForever(SKAction.animate(with: textures, timePerFrame: 0.05)))
-        super.runAction()
+    override func flyAction() {
+        view?.run(.repeatForever(SKAction.animate(with: textures, timePerFrame: 0.05)))
+        super.flyAction()
     }
     
-    required init() {}
+    deinit {
+        print("bye Enemy Animated Controller")
+    }
 }

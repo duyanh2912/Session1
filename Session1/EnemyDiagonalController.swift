@@ -11,13 +11,17 @@ import Foundation
 class EnemyDiagonalController: EnemyController {
     var isFromLeft: Bool = true
     
-    init(isFromLeft: Bool, parent: SKScene) {
-        super.init()
+    func set(isFromLeft: Bool) {
         self.isFromLeft = isFromLeft
-        self.parent = parent
+        if isFromLeft {
+            super.set(customImage: #imageLiteral(resourceName: "enemy-green-1"))
+        } else {
+            super.set(customImage: #imageLiteral(resourceName: "enemy-green-2"))
+        }
     }
     
-    required init() {
+    deinit {
+        print("bye Enemy Diagonal Controller")
     }
     
     override func configProperties() {
@@ -27,7 +31,7 @@ class EnemyDiagonalController: EnemyController {
             beginX = -view.width / 2
         } else {
             view = View(texture: SKTexture(image: #imageLiteral(resourceName: "enemy-green-2")))
-            beginX = parent.size.width + view.width / 2
+            beginX = parent.size.width + (view?.width)! / 2
         }
         let beginY = CGFloat(drand48()) * parent.size.height / 2 + parent.size.height / 2 + view.height / 2
         view.position = CGPoint(x: beginX, y: beginY)
@@ -35,23 +39,24 @@ class EnemyDiagonalController: EnemyController {
         
     }
     
-    override func runAction() {
+    override func flyAction() {
         // Fly Action
         let move: SKAction
         if isFromLeft {
-            move = SKAction.moveDiagonallyToBottomRigt(node: view, parent: parent, speed: SPEED)
+            move = SKAction.moveDiagonallyToBottomRigt(node: view, speed: SPEED)
         } else {
-            move = SKAction.moveDiagonallyToBottomLeft(node: view, parent: parent, speed: SPEED)
+            move = SKAction.moveDiagonallyToBottomLeft(node: view, speed: SPEED)
         }
         view.run(.sequence([move, SKAction.removeFromParent()]))
-        
+    }
+    
+    override func shootAction() {
         // Shoot Action
-        let iFL = self.isFromLeft
-        let plane = self.view
-        let scene = self.parent
+        let plane = self.view!
         
-        let shoot = SKAction.run { [weak plane, weak scene] in
-            let bullet = EnemyDiagonalBulletController(isFromLeft: iFL, plane: plane!, parent: scene!)
+        let shoot = SKAction.run { [unowned plane, unowned self] in
+            let bullet = EnemyDiagonalBulletController(isFromLeft: self.isFromLeft, plane: plane, parent: self.parent)
+            bullet.isTargetingPlayer = self.isTargetingPlayer
             bullet.config()
         }
         view.run(.repeatForever(.sequence([shoot, SKAction.wait(forDuration: FIRING_INTERVAL)])))

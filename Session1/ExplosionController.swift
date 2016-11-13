@@ -14,9 +14,9 @@ class ExplosionController: Controller {
     let time: Double = 0.5
     var view: View!
     weak var plane: SKSpriteNode!
-    weak var parent: SKNode!
+    weak var parent: SKScene!
     
-    init(parent: SKNode) {
+    init(parent: SKScene) {
         self.parent = parent
         
         
@@ -33,6 +33,11 @@ class ExplosionController: Controller {
         view = View(texture: textures[0])
         config()
 //        explodeAction(completion: completion)
+    }
+    
+    func explode(at plane: SKSpriteNode, scale: CGFloat) {
+        explode(at: plane)
+        view.setScale(scale)
     }
     
     func configProperties() {
@@ -62,8 +67,8 @@ class ExplosionController: Controller {
         } else {
             view.run(.sequence([animate, .removeFromParent()]))
         }
-        let soundController = (parent as! GameScene).soundController
-        soundController?.playSound(sound: (SoundController.EXPLOSION))
+        
+        self.parent.run(SoundController.EXPLOSION)
     }
 
     func configOnContact() {}

@@ -43,14 +43,22 @@ class EnemyDiagonalBulletController: EnemyBulletController {
     
     override func runAction() {
         let action: SKAction
-        switch isFromLeft {
-        case true:
-            action = SKAction.moveDiagonallyToBottomRigt(node: bullet, parent: parent, speed: SPEED)
-            
-        case false:
-            action = SKAction.moveDiagonallyToBottomLeft(node: bullet, parent: parent, speed: SPEED)
+        if isTargetingPlayer {
+            action = SKAction.shootToTarget(
+                node: bullet,
+                target: (parent as! GameScene).playerController.view,
+                parent: parent,
+                speed: SPEED
+            )
+        } else {
+            switch isFromLeft {
+            case true:
+                action = SKAction.moveDiagonallyToBottomRigt(node: bullet, speed: SPEED)
+                
+            case false:
+                action = SKAction.moveDiagonallyToBottomLeft(node: bullet, speed: SPEED)
+            }
         }
-        
         bullet.run(.repeatForever(.sequence([action, SKAction.removeFromParent()])))
         parent.run(SKAction.playSoundFileNamed("enemy_shoot", waitForCompletion: false))
         print(SPEED)

@@ -9,11 +9,14 @@
 import SpriteKit
 import GameKit
 
-class GameScene: SKScene, SKPhysicsContactDelegate {
+class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
+    var onContact: OnContactType! = {(_) in }
+    
     var playerController: PlayerController!
+    var randomEnemyGenerator: RandomEnemyGenerator!
     var explosionController: ExplosionController!
     var soundController: SoundController!
-    
+        
     var hpLabel: SKLabelNode!
     var hpLabelBlock: SKSpriteNode!
     
@@ -32,15 +35,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         print("bye Game Scene")
     }
     
+    override func willMove(from view: SKView) {
+    }
+    
     override func didMove(to view: SKView) {
+        addExplosionController()
+        addSoundController()
+        // Phải có 1 instance của SoundController nếu ko sẽ bị mất tiếng nổ
+        // và tiếng ko ổn định
         configPhysics()
         addBackground()
         addPlayer()
         addEnemies()
         addHpLabel()
         addScoreLabel()
-        addExplosionController()
-        addSoundController()
     }
     
     func addSoundController() {
@@ -93,11 +101,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         guard let nodeA = contact.bodyA.node as? View, let nodeB = contact.bodyB.node as? View else { return
         }
-        guard let onContactA = nodeA.onContact, let onContactB = nodeB.onContact else {
-            return
-        }
-        onContactA(nodeB, contact)
-        onContactB(nodeA, contact)
+        
+        nodeA.onContact(nodeB, contact)
+        nodeB.onContact(nodeA, contact)
     }
     
     func addBackground() {
@@ -117,40 +123,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func configPhysics() {
         self.physicsWorld.gravity = CGVector.zero
         self.physicsWorld.contactDelegate = self
+        
+        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+        self.physicsBody?.categoryBitMask = BitMask.wall.rawValue
+        self.physicsBody?.collisionBitMask = 0
+        
+//        self.speed = 2
     }
     
     func addPlayer() {
         playerController = PlayerController(parent: self)
-        playerController.view = View(imageNamed: "player_image/plane4")
+        playerController.set(customImage: UIImage(named: "player_image/plane4"))
         playerController.FIRING_INTERVAL = 0.2
-        playerController.config()
-    
+        playerController.spawnPlayer()
     }
     
     func addEnemies() {
-        let add = SKAction.run { [unowned self] in
-            let enemyController: PlaneController
-            
-            let i = Int(arc4random_uniform(UInt32(EnemyType.types.count)))
-            switch EnemyType.types[i] {
-                
-            case EnemyType.enemy_green_1:
-                enemyController = EnemyDiagonalController(isFromLeft: true, parent: self)
-            
-            case EnemyType.enemy_green_2:
-                enemyController = EnemyDiagonalController(isFromLeft: false, parent: self)
-            
-            case EnemyType.enemy_plane_white_animated, EnemyType.enemy_plane_yellow_animated:
-                enemyController = EnemyAnimatedController(imageName: EnemyType.types[i].rawValue, parent: self)
-                
-            default:
-                enemyController = EnemyController(parent: self)
-            }
-            
-            enemyController.config()
-        }
-        let delay = SKAction.wait(forDuration: TIME_BETWEEN_SPAWN)
-        self.run(.repeatForever(.sequence([add, delay])))
+        randomEnemyGenerator = RandomEnemyGenerator(parent: self)
+        randomEnemyGenerator.hardcoreMode = true
+        randomEnemyGenerator.generate(interval: TIME_BETWEEN_SPAWN)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {

@@ -8,7 +8,8 @@
 import SpriteKit
 import Foundation
 class PlayerController: PlaneController {
-    var view: View! = View(imageNamed: "player_image/plane3")
+    var texture: SKTexture!
+    var view: View!
     var SPEED: CGFloat! = 80
     weak var parent: SKScene!
     var hp = 10 {
@@ -20,7 +21,22 @@ class PlayerController: PlaneController {
     }
     var FIRING_INTERVAL: Double! = 0.5
     
-    required init() {}
+    init(parent: SKScene) {
+        self.parent = parent
+    }
+    
+    func set(customImage: UIImage?) {
+        if let playerImage = customImage {
+            texture = SKTexture(image: playerImage)
+        } else {
+            texture = SKTexture(imageNamed: "player_image/plane_3")
+        }
+    }
+    
+    func spawnPlayer() {
+        view = View(texture: texture)
+        config()
+    }
     
     deinit {
         print("bye Player Controller")
@@ -37,13 +53,13 @@ class PlayerController: PlaneController {
         view.constraints = [constraint]
     }
     
-    func configBitMask() {
+    func configPhysics() {
         view.physicsBody?.categoryBitMask = BitMask.player.rawValue
         view.physicsBody?.contactTestBitMask = BitMask.enemyBullet.rawValue | BitMask.enemy.rawValue
         view.physicsBody?.collisionBitMask = 0
     }
     
-    func runAction() {
+    func shootAction() {
         let addBullet = SKAction.run { [unowned self] in
             let bulletController = PlayerBulletController(
                 plane: self.view,
@@ -61,34 +77,34 @@ class PlayerController: PlaneController {
         self.view.run(.repeatForever(.sequence([addBullet, delay])))
     }
     
+    func flyAction() {}
+    
     func configOnContact() {
         view.onContact = { [weak self] (other, contact) in
-            let soundController = (self?.parent as! GameScene).soundController
-            soundController?.playSound(sound: (SoundController.PLAYER_HIT))
-            
             self?.hp -= 1
             
-            // máy bay cháy
-            let emitter = SKEmitterNode(fileNamed: "Fire")
-            emitter?.position = contact.contactPoint.positionRelative(to: (self?.view)!)
-            emitter?.targetNode = self?.parent
-            self?.view.addChild(emitter!)
-            
-            // die bitch
-            if self?.hp == 0 {
+            if (self?.hp)! <= 0 {
+                // die bitch
                 self?.view.removeFromParent()
                 
                 let explosionController = (self?.parent as! GameScene).explosionController!
                 explosionController.explode(at: (self?.view)!)
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + explosionController.time * 1.2) {
-                if let gameoverScene = SKScene(fileNamed: "GameoverScene") {
-                    guard let scene = self?.parent else { return }
-                    gameoverScene.size = scene.size
-                    gameoverScene.scaleMode = .aspectFill
-                    scene.view?.presentScene(gameoverScene)
+                    if let gameoverScene = SKScene(fileNamed: "GameoverScene") {
+                        guard let scene = self?.parent else { return }
+                        gameoverScene.size = scene.size
+                        gameoverScene.scaleMode = .aspectFill
+                        scene.view?.presentScene(gameoverScene)
                     }
                 }
+            } else {
+                // máy bay cháy
+                self?.parent.run(SoundController.PLAYER_HIT)
+                let emitter = SKEmitterNode(fileNamed: "Fire")
+                emitter?.position = contact.contactPoint.positionRelative(to: (self?.view)!)
+                emitter?.targetNode = self?.parent
+                self?.view.addChild(emitter!)
             }
         }
     }

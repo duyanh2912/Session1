@@ -31,7 +31,6 @@ extension CGPoint {
         
         return CGPoint(x: x, y: y)
     }
-    
 }
 
 extension CGRect {
@@ -58,14 +57,14 @@ extension SKAction {
         return SKAction.moveTo(y: parent.frame.height + node.size.height / 2, duration: Double(time))
     }
     
-    static func moveToBottom(node: SKSpriteNode, parent: SKNode, speed: CGFloat) -> SKAction {
+    static func moveToBottom(node: SKSpriteNode, speed: CGFloat) -> SKAction {
         let distance = abs(node.position.y - node.size.height / 2)
         let time = distance / speed
         
         return SKAction.moveTo(y: -node.size.height / 2, duration: Double(time))
     }
     
-    static func moveDiagonallyToBottomRigt(node: SKSpriteNode, parent: SKNode, speed: CGFloat) -> SKAction {
+    static func moveDiagonallyToBottomRigt(node: SKSpriteNode, speed: CGFloat) -> SKAction {
         let endingY = -node.size.height / 2
         let endingX = node.position.x + (node.position.y - endingY)
         
@@ -76,7 +75,7 @@ extension SKAction {
         return SKAction.move(to: destination, duration: Double(time))
     }
     
-    static func moveDiagonallyToBottomLeft(node: SKSpriteNode, parent: SKNode, speed: CGFloat) -> SKAction {
+    static func moveDiagonallyToBottomLeft(node: SKSpriteNode, speed: CGFloat) -> SKAction {
         let endingY = -node.size.height / 2
         let endingX = node.position.x - (node.position.y - endingY)
         
@@ -86,5 +85,24 @@ extension SKAction {
         
         return SKAction.move(to: destination, duration: Double(time))
     }
-
+    
+    static func shootToTarget(node: SKSpriteNode, target: SKSpriteNode, parent: SKNode, speed: CGFloat) -> SKAction {
+        let dx = target.position.x - node.position.x
+        let dy = target.position.y - node.position.y
+        
+        let destinationX: CGFloat
+        if dx < 0 {
+            destinationX = -node.size.width / 2
+        } else {
+            destinationX = parent.frame.width + node.size.width / 2
+        }
+        let destination = CGPoint(
+            x: destinationX,
+            y: node.position.y + (destinationX - node.position.x) * dy / dx
+        )
+        let time = Double(destination.distance(to: node.position) / speed)
+        return SKAction.move(to: destination, duration: time)
+        
+    }
 }
+

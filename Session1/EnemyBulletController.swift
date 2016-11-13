@@ -11,7 +11,7 @@ import SpriteKit
 
 class EnemyBulletController: BulletController {
     var bullet: View! = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-round")))
-    var SPEED: CGFloat! = 200
+    var SPEED: CGFloat! = 300
     weak var parent: SKNode!
     weak var plane: View!
     var isTargetingPlayer = false
@@ -31,19 +31,28 @@ class EnemyBulletController: BulletController {
     
     func configBitMask() {
         bullet.physicsBody?.categoryBitMask = BitMask.enemyBullet.rawValue
-        bullet.physicsBody?.contactTestBitMask = BitMask.player.rawValue
+        bullet.physicsBody?.contactTestBitMask = BitMask.player.rawValue | BitMask.wall.rawValue
         bullet.physicsBody?.collisionBitMask = 0
     }
     
     func runAction() {
         // Action
-        let moveToBottomAction = SKAction.moveToBottom(
-            node: bullet,
-            parent: parent,
-            speed: SPEED
-        )
-        bullet.run(.sequence([moveToBottomAction, SKAction.removeFromParent()]))
-        let soundController = (parent as! GameScene).soundController
-        soundController?.playSound(sound: (SoundController.ENEMY_SHOOT))
+        let action: SKAction
+        if !isTargetingPlayer {
+            action = SKAction.moveToBottom(
+                node: bullet,
+                speed: SPEED
+            )
+        } else {
+            action = SKAction.shootToTarget(
+                node: bullet,
+                target: (parent as! GameScene).playerController.view,
+                parent: parent,
+                speed: SPEED
+            )
+        }
+        bullet.run(.sequence([action, .removeFromParent()]))
+        self.parent.run(SoundController.ENEMY_SHOOT)
     }
 }
+

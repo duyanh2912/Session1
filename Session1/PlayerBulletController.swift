@@ -31,6 +31,7 @@ class PlayerBulletController: BulletController {
         bullet.physicsBody?.categoryBitMask = BitMask.playerBullet.rawValue
         bullet.physicsBody?.contactTestBitMask = BitMask.enemy.rawValue
         bullet.physicsBody?.collisionBitMask = 0
+        bullet.physicsBody?.usesPreciseCollisionDetection = true
     }
     
     func runAction() {
@@ -42,7 +43,6 @@ class PlayerBulletController: BulletController {
         )
         
         bullet.run(.sequence([moveToTopAction, SKAction.removeFromParent()]))
-        let soundController = (parent as! GameScene).soundController
-        soundController?.playSound(sound: (SoundController.PLAYER_SHOOT))
+        self.parent.run(SoundController.PLAYER_SHOOT)
     }
 }

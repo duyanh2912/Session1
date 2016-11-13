@@ -8,40 +8,37 @@
 import SpriteKit
 import Foundation
 
-protocol PlaneController {
+protocol PlaneController: Controller {
     var view: View! { get set }
+    var texture: SKTexture! { get set }
     var SPEED: CGFloat! { get set }
     weak var parent: SKScene! { get set }
     var FIRING_INTERVAL: Double! { get set }
     
-    init()
-    
-    func configProperties()
-    func configBitMask()
-    func runAction()
-    func configOnContact()
+    func flyAction()
+    func shootAction()
 }
 
 extension PlaneController {
-    init(parent: SKScene) {
-        self.init()
-        self.parent = parent
-    }
-    
     func config() {
         // Config Properties
         configProperties()
         
         // Plane's Physics
         view.physicsBody = SKPhysicsBody(texture: view.texture!, size: view.size.scaled(by: 0.9))
-        configBitMask()
+        configPhysics()
         
         // Action
-        runAction()
+        configActions()
         
         // Config plane's onContact
         configOnContact()
         
         parent.addChild(view)
+    }
+    
+    func configActions() {
+        flyAction()
+        shootAction()
     }
 }

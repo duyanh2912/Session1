@@ -8,11 +8,9 @@
 
 import SpriteKit
 
-typealias OnContactType = ((_ other: View, _ contact: SKPhysicsContact) -> Void)
-
-class View: SKSpriteNode {
+class View: SKSpriteNode, OnContact {
+    var onContact: OnContactType!
     
-    var onContact : OnContactType?
     var width: CGFloat {
         return self.size.width
     }

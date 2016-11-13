@@ -10,7 +10,7 @@ import Foundation
 
 protocol Controller {
     var view: View! { get set }
-    var parent: SKNode! { get set }
+    var parent: SKScene! { get set }
     
     func configProperties()
     func configPhysics()

@@ -16,9 +16,11 @@ class SoundController {
     static let ENEMY_SHOOT = SKAction.playSoundFileNamed("enemy_shoot", waitForCompletion: false)
     static let EXPLOSION = SKAction.playSoundFileNamed("explosion", waitForCompletion: false)
     static let PLAYER_HIT = SKAction.playSoundFileNamed("player_hit", waitForCompletion: false)
+    static let GAME_OVER = SKAction.playSoundFileNamed("game_over", waitForCompletion: false)
     
     init(parent: SKScene) {
         self.parent = parent
+        print("hello Sound Controller")
     }
     
     func playSound(sound: SKAction) {
