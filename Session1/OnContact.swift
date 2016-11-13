@@ -11,5 +11,5 @@ import Foundation
 typealias OnContactType = ((_ other: View, _ contact: SKPhysicsContact) -> Void)
 
 protocol OnContact {
-    var onContact: OnContactType! { get set }
+    var onContact: OnContactType? { get set }
 }

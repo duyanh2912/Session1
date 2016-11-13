@@ -9,7 +9,7 @@
 import SpriteKit
 
 class View: SKSpriteNode, OnContact {
-    var onContact: OnContactType!
+    var onContact: OnContactType?
     
     var width: CGFloat {
         return self.size.width

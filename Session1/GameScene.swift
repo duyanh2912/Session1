@@ -10,7 +10,10 @@ import SpriteKit
 import GameKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
-    var onContact: OnContactType! = {(_) in }
+    var onContact: OnContactType? = nil
+    
+    let TIME_BETWEEN_SPAWN: Double = 1.5
+    let hardcoreMode = false
     
     var playerController: PlayerController!
     var randomEnemyGenerator: RandomEnemyGenerator!
@@ -29,7 +32,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     var scoreLabel: SKLabelNode!
     var scoreLabelBlock: SKSpriteNode!
     
-    let TIME_BETWEEN_SPAWN: Double = 1.5
+    var background1: SKSpriteNode!
+    var background2: SKSpriteNode!
     
     deinit {
         print("bye Game Scene")
@@ -102,22 +106,56 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
         guard let nodeA = contact.bodyA.node as? View, let nodeB = contact.bodyB.node as? View else { return
         }
         
-        nodeA.onContact(nodeB, contact)
-        nodeB.onContact(nodeA, contact)
+        nodeA.onContact?(nodeB, contact)
+        nodeB.onContact?(nodeA, contact)
     }
     
     func addBackground() {
-        let background = SKSpriteNode(texture: SKTexture(image: #imageLiteral(resourceName: "background")))
-        background.position = CGPoint(x: frame.midX, y: frame.midY)
-        background.zPosition = -1
-        
-        let widthRatio = background.size.width / size.width
-        let heightRatio = background.size.height / size.height
+        background1 = SKSpriteNode(imageNamed: "background")
+        background2 = SKSpriteNode(imageNamed: "background")
+        let widthRatio = background1.size.width / size.width
+        let heightRatio = background1.size.height / size.height
         let ratio = min(widthRatio, heightRatio)
-        background.xScale = 1/ratio
-        background.yScale = 1/ratio
         
-        addChild(background)
+        background1.xScale = 1/ratio
+        background1.yScale = 1/ratio
+        
+        background2.xScale = 1/ratio
+        background2.yScale = 1/ratio
+        
+        background1.anchorPoint = CGPoint.zero
+        background1.position = CGPoint.zero
+        background1.zPosition = -1
+        self.addChild(background1)
+        
+        background2.anchorPoint = CGPoint.zero
+        background2.position = CGPoint(x: 0, y: background1.size.height - 1)
+        background2.zPosition = -1
+        self.addChild(background2)
+        
+        background1.blendMode = .replace
+        background2.blendMode = .replace
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+        background1.position = CGPoint(x: background1.position.x, y: background1.position.y - 1)
+        background2.position = CGPoint(x: background2.position.x, y: background2.position.y - 1)
+        
+        if background1.position.y < -background1.size.height
+        {
+            background1.position = CGPoint(
+                x: 0,
+                y: background1.position.y + 2 * background2.size.height - 2
+            )
+        }
+        
+        if background2.position.y < -background2.size.height
+        {
+            background2.position = CGPoint(
+                x: 0,
+                y: background2.position.y + 2 * background1.size.height - 2
+            )
+        }
     }
     
     func configPhysics() {
@@ -140,7 +178,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     
     func addEnemies() {
         randomEnemyGenerator = RandomEnemyGenerator(parent: self)
-        randomEnemyGenerator.hardcoreMode = true
+        randomEnemyGenerator.hardcoreMode = self.hardcoreMode
         randomEnemyGenerator.generate(interval: TIME_BETWEEN_SPAWN)
     }
     
