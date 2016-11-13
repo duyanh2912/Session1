@@ -14,6 +14,7 @@ protocol PlaneController: Controller {
     var SPEED: CGFloat! { get set }
     weak var parent: SKScene! { get set }
     var FIRING_INTERVAL: Double! { get set }
+    var bulletController: BulletController! { get set }
     
     func flyAction()
     func shootAction()

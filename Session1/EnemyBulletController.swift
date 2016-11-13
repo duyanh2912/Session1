@@ -10,11 +10,12 @@ import Foundation
 import SpriteKit
 
 class EnemyBulletController: BulletController {
-    var view: View! = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-round")))
-    var SPEED: CGFloat! = 300
+    var texture: SKTexture! = SKTexture(image: #imageLiteral(resourceName: "bullet-round"))
+    var view: View!
     weak var parent: SKScene!
     weak var plane: View!
     var isTargetingPlayer = false
+    var SPEED: CGFloat! = 300
     
     required init() {}
     
@@ -31,7 +32,7 @@ class EnemyBulletController: BulletController {
     
     func configPhysics() {
         view.physicsBody?.categoryBitMask = BitMask.enemyBullet.rawValue
-        view.physicsBody?.contactTestBitMask = BitMask.player.rawValue | BitMask.wall.rawValue
+        view.physicsBody?.contactTestBitMask = BitMask.player.rawValue 
         view.physicsBody?.collisionBitMask = 0
     }
     

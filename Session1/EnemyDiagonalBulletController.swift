@@ -15,14 +15,17 @@ class EnemyDiagonalBulletController: EnemyBulletController {
         print("bye Enemy Diagonal Bullet Controller")
     }
     
-    init(isFromLeft: Bool, plane: View, parent: SKScene) {
-        super.init()
-        self.isFromLeft = isFromLeft
-        self.plane = plane
-        self.parent = parent
+    required init() {
+    
     }
     
-    required init() {}
+    func spawnBullet(of plane: View, isFromLeft: Bool) {
+        self.isFromLeft = isFromLeft
+        view = View(texture: texture)
+        self.plane = plane
+        config()
+        view = nil
+    }
     
     override func configProperties() {
         view.name = "enemy_bullet"
@@ -41,7 +44,7 @@ class EnemyDiagonalBulletController: EnemyBulletController {
         }
     }
     
-    override func configPhysics() {
+    override func configActions() {
         let action: SKAction
         if isTargetingPlayer {
             action = SKAction.shootToTarget(

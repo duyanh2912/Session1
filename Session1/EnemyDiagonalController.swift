@@ -11,6 +11,11 @@ import Foundation
 class EnemyDiagonalController: EnemyController {
     var isFromLeft: Bool = true
     
+    override init(parent: SKScene) {
+        super.init(parent: parent)
+        self.bulletController = EnemyDiagonalBulletController(parent: self.parent)
+    }
+    
     func set(isFromLeft: Bool) {
         self.isFromLeft = isFromLeft
         if isFromLeft {
@@ -18,6 +23,7 @@ class EnemyDiagonalController: EnemyController {
         } else {
             super.set(customImage: #imageLiteral(resourceName: "enemy-green-2"))
         }
+        (bulletController as! EnemyDiagonalBulletController).isFromLeft = isFromLeft
     }
     
     deinit {
@@ -53,11 +59,10 @@ class EnemyDiagonalController: EnemyController {
     override func shootAction() {
         // Shoot Action
         let plane = self.view!
+        let iFL = self.isFromLeft
         
         let shoot = SKAction.run { [unowned plane, unowned self] in
-            let bullet = EnemyDiagonalBulletController(isFromLeft: self.isFromLeft, plane: plane, parent: self.parent)
-            bullet.isTargetingPlayer = self.isTargetingPlayer
-            bullet.config()
+            (self.bulletController as! EnemyDiagonalBulletController).spawnBullet(of: plane, isFromLeft: iFL)
         }
         view.run(.repeatForever(.sequence([shoot, SKAction.wait(forDuration: FIRING_INTERVAL)])))
         

@@ -14,7 +14,12 @@ class EnemyController: PlaneController {
     var SPEED: CGFloat! = 160
     weak var parent: SKScene!
     var FIRING_INTERVAL: Double! = 1
-    var isTargetingPlayer = false
+    var isTargetingPlayer = false {
+        didSet {
+            (bulletController as! EnemyBulletController).isTargetingPlayer = self.isTargetingPlayer
+        }
+    }
+    var bulletController: BulletController!
     
     deinit {
         print("bye Enemy Controller")
@@ -30,6 +35,7 @@ class EnemyController: PlaneController {
     
     init(parent: SKScene) {
         self.parent = parent
+        bulletController = EnemyBulletController(parent: self.parent)
     }
     
     func set(customImage: UIImage?){
@@ -59,13 +65,10 @@ class EnemyController: PlaneController {
     
     func shootAction() {
         // Shoot Action
-        let plane = self.view
-        let scene = self.parent
+        let plane = self.view!
         
-        let addBullet = SKAction.run { [weak plane, weak scene, weak self] in
-            let bulletController = EnemyBulletController(plane: plane!, parent: scene!)
-            bulletController.isTargetingPlayer = (self?.isTargetingPlayer)!
-            bulletController.config()
+        let addBullet = SKAction.run { [unowned plane, unowned self] in
+            self.bulletController.spawnBullet(of: plane)
         }
         let delay = SKAction.wait(forDuration: self.FIRING_INTERVAL)
         

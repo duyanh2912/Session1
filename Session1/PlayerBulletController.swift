@@ -9,7 +9,8 @@
 import SpriteKit
 
 class PlayerBulletController: BulletController {
-    var view: View! = View(texture: SKTexture(image: #imageLiteral(resourceName: "bullet-double")))
+    var texture: SKTexture! = SKTexture(image: #imageLiteral(resourceName: "bullet-double"))
+    var view: View!
     var SPEED: CGFloat! = 300
     weak var parent: SKScene!
     weak var plane: View!

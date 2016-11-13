@@ -11,15 +11,29 @@ import GameKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     var onContact: OnContactType? = nil
+    let fontSize: CGFloat = 30
     
     let TIME_BETWEEN_SPAWN: Double = 1.5
-    let hardcoreMode = false
+    
+    var hardcoreMode = false {
+        didSet {
+            randomEnemyGenerator.hardcoreMode = self.hardcoreMode
+            if hardcoreMode {
+                hardcoreLabel.text = "Hardcore: on"
+            } else {
+                hardcoreLabel.text = "Hardcore: off"
+            }
+            hardcoreLabelBlock.size = hardcoreLabel.frame.size.add(dWidth: 6, dHeight: 6)
+        }
+    }
+    var hardcoreLabel: SKLabelNode!
+    var hardcoreLabelBlock: SKSpriteNode!
     
     var playerController: PlayerController!
     var randomEnemyGenerator: RandomEnemyGenerator!
     var explosionController: ExplosionController!
     var soundController: SoundController!
-        
+    
     var hpLabel: SKLabelNode!
     var hpLabelBlock: SKSpriteNode!
     
@@ -53,6 +67,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
         addEnemies()
         addHpLabel()
         addScoreLabel()
+        addHardcoreLabel()
     }
     
     func addSoundController() {
@@ -63,8 +78,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
         explosionController = ExplosionController(parent: self)
     }
     
+    func addHardcoreLabel() {
+        hardcoreLabel = SKLabelNode(text: "Hardcore: off")
+        hardcoreLabel.fontSize = self.fontSize
+        hardcoreLabel.horizontalAlignmentMode = .left
+        hardcoreLabel.verticalAlignmentMode = .top
+        hardcoreLabel.position = CGPoint(x: 8, y: self.size.height - 8)
+        hardcoreLabel.zPosition = 2
+        hardcoreLabel.blendMode = .replace
+        hardcoreLabel.fontColor = UIColor.white
+        
+        hardcoreLabelBlock = SKSpriteNode(
+            color: .black,
+            size: hardcoreLabel.frame.size.add(dWidth: 6, dHeight: 6)
+        )
+        hardcoreLabelBlock.zPosition = 2
+        hardcoreLabelBlock.alpha = 0.3
+        hardcoreLabelBlock.anchorPoint = CGPoint(x: 0, y: 1)
+        hardcoreLabelBlock.position = hardcoreLabel.position.add(x: -3, y: 3)
+        
+        addChild(hardcoreLabel)
+        addChild(hardcoreLabelBlock)
+        
+    }
+    
     func addScoreLabel() {
         scoreLabel = SKLabelNode(text: "Score: 0")
+        scoreLabel.fontSize = self.fontSize
         scoreLabel.horizontalAlignmentMode = .right
         scoreLabel.position = CGPoint(x: self.size.width - 8, y: 8)
         scoreLabel.zPosition = 2
@@ -83,6 +123,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     
     func addHpLabel() {
         hpLabel = SKLabelNode(text: "HP: \(playerController.hp)")
+        hpLabel.fontSize = self.fontSize
         hpLabel.horizontalAlignmentMode = .left
         hpLabel.position = CGPoint(x: 8, y: 8)
         hpLabel.zPosition = 2
@@ -166,7 +207,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
         self.physicsBody?.categoryBitMask = BitMask.wall.rawValue
         self.physicsBody?.collisionBitMask = 0
         
-//        self.speed = 2
+        //        self.speed = 2
     }
     
     func addPlayer() {
@@ -178,11 +219,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     
     func addEnemies() {
         randomEnemyGenerator = RandomEnemyGenerator(parent: self)
-        randomEnemyGenerator.hardcoreMode = self.hardcoreMode
         randomEnemyGenerator.generate(interval: TIME_BETWEEN_SPAWN)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         playerController.move(touches: touches)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if nodes(at: (touches.first?.location(in: self))!).contains(hardcoreLabelBlock) {
+            hardcoreMode = !hardcoreMode
+            return
+        }
+        if touches.count == 2 {
+            hardcoreMode = !hardcoreMode
+        }
     }
 }

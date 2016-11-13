@@ -10,7 +10,7 @@ import Foundation
 
 class RandomEnemyGenerator {
     weak var parent: SKScene!
-    var hardcoreMode = false {
+    var hardcoreMode = true {
         didSet {
             if hardcoreMode == true {
                 enemyController.isTargetingPlayer = true

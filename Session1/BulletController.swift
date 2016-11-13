@@ -9,6 +9,7 @@ import SpriteKit
 import Foundation
 
 protocol BulletController: Controller {
+    var texture: SKTexture! { get set }
     var view: View! { get set }
     var SPEED: CGFloat! { get set }
     weak var parent: SKScene! { get set }
@@ -18,10 +19,24 @@ protocol BulletController: Controller {
   }
 
 extension BulletController {
-    init(plane: View, parent: SKScene) {
+    init(parent: SKScene) {
         self.init()
-        self.plane = plane
         self.parent = parent
+    }
+    
+    mutating func spawnBullet(of plane: View) {
+        view = View(texture: texture)
+        self.plane = plane
+        config()
+        view = nil
+    }
+    
+    mutating func spawnBullet(of plane: View, scale: CGFloat) {
+        view = View(texture: texture)
+        view.setScale(scale)
+        self.plane = plane
+        config()
+        view = nil
     }
     
     func config() {

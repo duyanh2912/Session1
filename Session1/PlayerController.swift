@@ -20,9 +20,11 @@ class PlayerController: PlaneController {
         }
     }
     var FIRING_INTERVAL: Double! = 0.5
+    var bulletController: BulletController!
     
     init(parent: SKScene) {
         self.parent = parent
+        bulletController = PlayerBulletController(parent: self.parent)
     }
     
     func set(customImage: UIImage?) {
@@ -61,15 +63,8 @@ class PlayerController: PlaneController {
     
     func shootAction() {
         let addBullet = SKAction.run { [unowned self] in
-            let bulletController = PlayerBulletController(
-                plane: self.view,
-                parent: self.parent
-            )
-            
-            bulletController.bullet = View(texture: self.view.texture, size: self.view.size.scaled(by: 0.25))
-            bulletController.SPEED = 200
-            
-            bulletController.config()
+            self.bulletController.texture = self.texture
+            self.bulletController.spawnBullet(of: self.view, scale: 0.25)
         }
         
         let delay = SKAction.wait(forDuration: self.FIRING_INTERVAL)
