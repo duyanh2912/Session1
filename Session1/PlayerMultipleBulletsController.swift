@@ -25,7 +25,7 @@ class PlayerMultipleBulletsController {
         print("bye Player Multiple Bullets Controller")
     }
     
-    func spawnBullet(customTexture: SKTexture?, customSpeed: CGFloat?, scale: CGFloat) {
+    func spawnBullet(customTexture: SKTexture?, customSpeed: CGFloat?, customAngle: CGFloat?, scale: CGFloat) {
         if customSpeed != nil {
             self.SPEED = customSpeed
         }
@@ -37,7 +37,13 @@ class PlayerMultipleBulletsController {
             texture = Textures.bullet_double
         }
         
-        var angle = CGFloat.pi / 24
+        var angle: CGFloat
+        if customAngle != nil {
+            angle = customAngle!
+        } else {
+            angle = CGFloat.pi / 24
+        }
+        
         for _ in 0...1 {
             let view = View(texture: texture)
             config(view: view, angle: angle, scale: scale)
@@ -52,6 +58,7 @@ class PlayerMultipleBulletsController {
         for view in views {
             parent.addChild(view)
         }
+        self.parent.run(SoundController.PLAYER_SHOOT)
     }
     
     func config(view: View, angle: CGFloat, scale: CGFloat) {
@@ -66,7 +73,7 @@ class PlayerMultipleBulletsController {
         view.name = "player_multiple_bullet"
         view.position = playerController.position.add(
             x: 0,
-            y: playerController.height / 2 + view.height / 2
+            y: playerController.height / 4
         )
     }
     

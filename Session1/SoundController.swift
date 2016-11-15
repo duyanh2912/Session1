@@ -10,22 +10,14 @@ import Foundation
 import SpriteKit
 
 class SoundController {
-    weak var parent: SKScene!
-    
     static let PLAYER_SHOOT = SKAction.playSoundFileNamed("player_shoot", waitForCompletion: false)
     static let ENEMY_SHOOT = SKAction.playSoundFileNamed("enemy_shoot", waitForCompletion: false)
     static let EXPLOSION = SKAction.playSoundFileNamed("explosion", waitForCompletion: false)
     static let PLAYER_HIT = SKAction.playSoundFileNamed("player_hit", waitForCompletion: false)
     static let GAME_OVER = SKAction.playSoundFileNamed("game_over", waitForCompletion: false)
+    static let POWERUP = SKAction.playSoundFileNamed("powerup", waitForCompletion: false)
     
-    init(parent: SKScene) {
-        self.parent = parent
-        print("hello Sound Controller")
-    }
-    
-    func playSound(sound: SKAction) {
-        parent.run(sound)
-    }
+    static let sharedInstance = SoundController()
     
     deinit {
         print("bye Sound Controller")

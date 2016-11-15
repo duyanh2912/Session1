@@ -34,7 +34,7 @@ class PlayerBulletController: BulletController {
         view.name = "player_bullet"
         view.position = planeController.position.add(
             x: 0,
-            y: planeController.height / 2 + self.height / 2)
+            y: planeController.height / 4 )
     }
     
     func configPhysics() {

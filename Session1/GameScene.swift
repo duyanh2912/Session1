@@ -71,7 +71,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     }
     
     func addSoundController() {
-        soundController = SoundController(parent: self)
+//        soundController = SoundController()
     }
     
     func addExplosionController() {
@@ -215,7 +215,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     func addPlayer() {
         playerController = PlayerController(parent: self)
         playerController.set(customTexture: nil)
-        playerController.FIRING_INTERVAL = 0.2
+        playerController.FIRING_INTERVAL = 0.5
         playerController.spawnPlayer()
     }
     

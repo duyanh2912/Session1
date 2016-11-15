@@ -53,8 +53,7 @@ class ExplosionController: Controller {
             timePerFrame: time / Double(textures.count)
         )
         view.run(.sequence([animate, .removeFromParent()]))
-        let soundController = (parent as! GameScene).soundController
-        soundController?.playSound(sound: (SoundController.EXPLOSION))
+        self.parent.run(SoundController.EXPLOSION)
     }
     
     func explodeAction(completion: (() -> Void)?) {
