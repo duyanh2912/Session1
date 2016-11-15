@@ -9,13 +9,22 @@
 import SpriteKit
 
 class PlayerBulletController: BulletController {
-    var texture: SKTexture! = SKTexture(image: #imageLiteral(resourceName: "bullet-double"))
+    var texture: SKTexture!
     var view: View!
     var SPEED: CGFloat! = 300
     weak var parent: SKScene!
-    weak var plane: View!
+    weak var planeController: PlaneController!
     
     required init() {}
+    
+    func set(customTexture: SKTexture?) {
+        if customTexture != nil {
+            self.texture = customTexture
+        } else {
+            self.texture = Textures.bullet_double
+        }
+        self.view = View(texture: texture)
+    }
     
     deinit {
         print("bye Player Bullet Controller")
@@ -23,26 +32,20 @@ class PlayerBulletController: BulletController {
     
     func configProperties() {
         view.name = "player_bullet"
-        view.position = plane.position.add(
+        view.position = planeController.position.add(
             x: 0,
-            y: plane.height / 2 + self.height / 2)
+            y: planeController.height / 2 + self.height / 2)
     }
     
     func configPhysics() {
         view.physicsBody?.categoryBitMask = BitMask.playerBullet.rawValue
-        view.physicsBody?.contactTestBitMask = BitMask.enemy.rawValue
+        view.physicsBody?.contactTestBitMask = BitMask.enemy.rawValue | BitMask.wall.rawValue
         view.physicsBody?.collisionBitMask = 0
     }
     
     func configActions() {
         // Action
-        let moveToTopAction = SKAction.moveToTop(
-            node: view,
-            parent: parent,
-            speed: SPEED
-        )
-        
-        view.run(.sequence([moveToTopAction, SKAction.removeFromParent()]))
+        view.physicsBody?.velocity = CGVector(dx: 0, dy: SPEED)
         self.parent.run(SoundController.PLAYER_SHOOT)
     }
 }

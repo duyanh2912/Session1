@@ -13,17 +13,15 @@ class EnemyDiagonalController: EnemyController {
     
     override init(parent: SKScene) {
         super.init(parent: parent)
-        self.bulletController = EnemyDiagonalBulletController(parent: self.parent)
     }
     
     func set(isFromLeft: Bool) {
         self.isFromLeft = isFromLeft
         if isFromLeft {
-            super.set(customImage: #imageLiteral(resourceName: "enemy-green-1"))
+            super.set(customTexture: Textures.enemy_green_1)
         } else {
-            super.set(customImage: #imageLiteral(resourceName: "enemy-green-2"))
+            super.set(customTexture: Textures.enemy_green_2)
         }
-        (bulletController as! EnemyDiagonalBulletController).isFromLeft = isFromLeft
     }
     
     deinit {
@@ -58,11 +56,10 @@ class EnemyDiagonalController: EnemyController {
     
     override func shootAction() {
         // Shoot Action
-        let plane = self.view!
-        let iFL = self.isFromLeft
-        
-        let shoot = SKAction.run { [unowned plane, unowned self] in
-            (self.bulletController as! EnemyDiagonalBulletController).spawnBullet(of: plane, isFromLeft: iFL)
+        let shoot = SKAction.run { [unowned self] in
+            let bulletController = EnemyDiagonalBulletController(planeController: self)
+            bulletController.set(customTexture: nil, isTargetingPlayer: self.isTargetingPlayer, isFromLeft: self.isFromLeft)
+            bulletController.spawnBullet()
         }
         view.run(.repeatForever(.sequence([shoot, SKAction.wait(forDuration: FIRING_INTERVAL)])))
         

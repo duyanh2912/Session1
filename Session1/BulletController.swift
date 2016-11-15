@@ -13,30 +13,26 @@ protocol BulletController: Controller {
     var view: View! { get set }
     var SPEED: CGFloat! { get set }
     weak var parent: SKScene! { get set }
-    weak var plane: View! { get set }
+    weak var planeController: PlaneController! { get set }
     
     init()
   }
 
 extension BulletController {
-    init(parent: SKScene) {
+    init(planeController: PlaneController) {
         self.init()
-        self.parent = parent
+        self.planeController = planeController
+        self.parent = planeController.parent
+        self.planeController.activeBulletControllers.append(self)
     }
     
-    mutating func spawnBullet(of plane: View) {
-        view = View(texture: texture)
-        self.plane = plane
+    func spawnBullet() {
         config()
-        view = nil
     }
     
-    mutating func spawnBullet(of plane: View, scale: CGFloat) {
-        view = View(texture: texture)
-        view.setScale(scale)
-        self.plane = plane
-        config()
-        view = nil
+    func spawnBullet(scale: CGFloat) {
+        self.view.setScale(scale)
+        self.spawnBullet()
     }
     
     func config() {
@@ -58,8 +54,17 @@ extension BulletController {
     
     func configOnContact() {
         let bullet = self.view!
-        bullet.onContact = { [unowned bullet] other in
+        
+        bullet.onContact = { [unowned bullet, weak self] other in
             bullet.removeFromParent()
+            self?.view = nil
+            self?.removeFromPlaneController()
+        }
+    }
+    
+    func removeFromPlaneController() {
+        if let index = planeController.activeBulletControllers.index(where: { $0 === self }) {
+            planeController.activeBulletControllers.remove(at: index)
         }
     }
 }

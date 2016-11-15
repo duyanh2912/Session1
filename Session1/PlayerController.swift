@@ -19,19 +19,24 @@ class PlayerController: PlaneController {
             scene?.hpLabelBlock.size = (scene?.hpLabel.frame.size.add(dWidth: 6, dHeight: 6))!
         }
     }
-    var FIRING_INTERVAL: Double! = 0.5
-    var bulletController: BulletController!
+    var FIRING_INTERVAL: Double! = 0.75
+    var activeBulletControllers = [BulletController]()
+    var powerLevel = 1 {
+        didSet {
+            view.removeAllActions()
+            self.configActions()
+        }
+    }
     
     init(parent: SKScene) {
         self.parent = parent
-        bulletController = PlayerBulletController(parent: self.parent)
     }
     
-    func set(customImage: UIImage?) {
-        if let playerImage = customImage {
-            texture = SKTexture(image: playerImage)
+    func set(customTexture: SKTexture?) {
+        if let playerTexture = customTexture {
+            texture = playerTexture
         } else {
-            texture = SKTexture(imageNamed: "player_image/plane_3")
+            texture = Textures.plane4
         }
     }
     
@@ -62,13 +67,21 @@ class PlayerController: PlaneController {
     }
     
     func shootAction() {
-        let addBullet = SKAction.run { [unowned self] in
-            self.bulletController.texture = self.texture
-            self.bulletController.spawnBullet(of: self.view, scale: 0.25)
+        let addBullet: SKAction
+        
+        if powerLevel == 1 {
+            addBullet = SKAction.run { [unowned self] in
+                let bulletController = PlayerBulletController(planeController: self)
+                bulletController.set(customTexture: self.texture)
+                bulletController.spawnBullet(scale: 0.25)
+            }
+        } else {
+            addBullet = SKAction.run { [unowned self] in
+                let bulletController = PlayerMultipleBulletsController(parent: self.parent, playerController: self)
+                bulletController.spawnBullet(customTexture: self.texture, customSpeed: nil, scale: 0.25)
+            }
         }
-        
         let delay = SKAction.wait(forDuration: self.FIRING_INTERVAL)
-        
         self.view.run(.repeatForever(.sequence([addBullet, delay])))
     }
     
@@ -76,48 +89,62 @@ class PlayerController: PlaneController {
     
     func configOnContact() {
         view.onContact = { [weak self] (other, contact) in
-            self?.hp -= 1
+            if (other as? SKNode)?.physicsBody?.categoryBitMask == BitMask.powerup.rawValue {
+                self?.powerup()
+                return
+            }
             
-            if (self?.hp)! <= 0 {
+            self?.hp -= 1
+            if (self?.hp)! == 0 {
                 // die bitch
-                self?.view.removeFromParent()
-                
-                let explosionController = (self?.parent as! GameScene).explosionController!
-                explosionController.explode(at: (self?.view)!)
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + explosionController.time * 1.2) {
-                    if let gameoverScene = SKScene(fileNamed: "GameoverScene") {
-                        guard let scene = self?.parent else { return }
-                        gameoverScene.size = scene.size
-                        gameoverScene.scaleMode = .aspectFill
-                        scene.view?.presentScene(gameoverScene)
-                    }
-                }
+                self?.die()
             } else {
                 // máy bay cháy
-                self?.parent.run(SoundController.PLAYER_HIT)
-                let emitter = SKEmitterNode(fileNamed: "Fire")
-                emitter?.position = contact.contactPoint.positionRelative(to: (self?.view)!)
-                emitter?.targetNode = self?.parent
-                self?.view.addChild(emitter!)
+                self?.ignite(at: contact)
             }
         }
     }
     
-    func move(touches: Set<UITouch>) {
-        if let touch = touches.first {
-            let location = touch.location(in: self.parent)
-            let previous = touch.previousLocation(in: self.parent)
-            
-            let dx = location.x - previous.x
-            let dy = location.y - previous.y
-            
-            let vector = CGVector(dx: dx, dy: dy)
-            
-            let distance = location.distance(to: previous)
-            let time = Double(distance / SPEED)
-            
-            view.run(.move(by: vector, duration: time))
+    func powerup() {
+        guard powerLevel < 3 else { return }
+        powerLevel += 1
+        
+    }
+    
+    func die() {
+        self.view.removeFromParent()
+        
+        let explosionController = (self.parent as! GameScene).explosionController!
+        explosionController.explode(at: (self.view)!)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + explosionController.time * 1.2) {
+            if let gameoverScene = SKScene(fileNamed: "GameoverScene") {
+                guard let scene = self.parent else { return }
+                gameoverScene.size = scene.size
+                gameoverScene.scaleMode = .aspectFill
+                scene.view?.presentScene(gameoverScene)
+            }
         }
     }
+    
+    func ignite(at contact: SKPhysicsContact) {
+        self.parent.run(SoundController.PLAYER_HIT)
+        let emitter = SKEmitterNode(fileNamed: "Fire")
+        emitter?.position = contact.contactPoint.positionRelative(to: (self.view)!)
+        emitter?.targetNode = self.parent
+        self.view.addChild(emitter!)
+    }
+    
+    func move(location: CGPoint, previous: CGPoint) {
+        let dx = location.x - previous.x
+        let dy = location.y - previous.y
+        
+        let vector = CGVector(dx: dx, dy: dy)
+        
+        let distance = location.distance(to: previous)
+        let time = Double(distance / SPEED)
+        
+        view.run(.move(by: vector, duration: time))
+    }
 }
+

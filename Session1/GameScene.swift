@@ -144,8 +144,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        guard let nodeA = contact.bodyA.node as? View, let nodeB = contact.bodyB.node as? View else { return
-        }
+        guard let nodeA = contact.bodyA.node as? OnContact, let nodeB = contact.bodyB.node as? OnContact else { return }
         
         nodeA.onContact?(nodeB, contact)
         nodeB.onContact?(nodeA, contact)
@@ -203,7 +202,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
         self.physicsWorld.gravity = CGVector.zero
         self.physicsWorld.contactDelegate = self
         
-        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame.insetBy(
+            dx: size.width * -0.2,
+            dy: size.height * -0.2)
+        )
         self.physicsBody?.categoryBitMask = BitMask.wall.rawValue
         self.physicsBody?.collisionBitMask = 0
         
@@ -212,7 +214,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     
     func addPlayer() {
         playerController = PlayerController(parent: self)
-        playerController.set(customImage: UIImage(named: "player_image/plane4"))
+        playerController.set(customTexture: nil)
         playerController.FIRING_INTERVAL = 0.2
         playerController.spawnPlayer()
     }
@@ -223,7 +225,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        playerController.move(touches: touches)
+        if let touch = touches.first {
+            let location = touch.location(in: self)
+            let previous = touch.previousLocation(in: self)
+            playerController.move(location: location, previous: previous)
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

@@ -8,7 +8,7 @@
 import SpriteKit
 import Foundation
 
-protocol Controller {
+protocol Controller: class {
     var view: View! { get set }
     var parent: SKScene! { get set }
     
@@ -29,6 +29,12 @@ extension Controller {
             return self.view.height
         }
     }
+    var position: CGPoint {
+        get {
+            return self.view.position
+        }
+    }
+    
     func config() {
         configProperties()
         configPhysics()

@@ -8,8 +8,8 @@
 import SpriteKit
 import Foundation
 
-typealias OnContactType = ((_ other: View, _ contact: SKPhysicsContact) -> Void)
+typealias OnContactType = ((_ other: OnContact, _ contact: SKPhysicsContact) -> Void)
 
-protocol OnContact {
+protocol OnContact: class {
     var onContact: OnContactType? { get set }
 }

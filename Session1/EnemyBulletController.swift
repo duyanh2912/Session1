@@ -10,11 +10,27 @@ import Foundation
 import SpriteKit
 
 class EnemyBulletController: BulletController {
-    var texture: SKTexture! = SKTexture(image: #imageLiteral(resourceName: "bullet-round"))
+    var texture: SKTexture!
     var view: View!
     weak var parent: SKScene!
-    weak var plane: View!
-    var isTargetingPlayer = false
+    weak var planeController: PlaneController!
+    var isTargetingPlayer = false {
+        didSet {
+            if isTargetingPlayer == true {
+                guard let bullet = view else {
+                    return
+                }
+                bullet.removeAllActions()
+                let action = SKAction.shootToTarget(
+                    node: bullet,
+                    target: (parent as! GameScene).playerController.view,
+                    parent: parent,
+                    speed: SPEED
+                )
+                bullet.run(action)
+            }
+        }
+    }
     var SPEED: CGFloat! = 300
     
     required init() {}
@@ -23,36 +39,42 @@ class EnemyBulletController: BulletController {
         print("bye Enemy Bullet Controller")
     }
     
+    func set(customTexture: SKTexture?, isTargetingPlayer: Bool) {
+        if customTexture != nil {
+            self.texture = customTexture
+        } else {
+            self.texture = Textures.bullet_round
+        }
+        self.isTargetingPlayer = isTargetingPlayer
+        self.view = View(texture: texture)
+    }
+    
     func configProperties() {
         view.name = "enemy_bullet"
-        view.position = plane.position.add(
+        view.position = planeController.position.add(
             x: 0,
-            y: -plane.height / 2 - self.height / 2)
+            y: -planeController.height / 2 - self.height / 2)
     }
     
     func configPhysics() {
         view.physicsBody?.categoryBitMask = BitMask.enemyBullet.rawValue
-        view.physicsBody?.contactTestBitMask = BitMask.player.rawValue 
+        view.physicsBody?.contactTestBitMask = BitMask.player.rawValue | BitMask.wall.rawValue
         view.physicsBody?.collisionBitMask = 0
     }
     
     func configActions() {
         // Action
-        let action: SKAction
-        if !isTargetingPlayer {
-            action = SKAction.moveToBottom(
-                node: view,
-                speed: SPEED
-            )
-        } else {
-            action = SKAction.shootToTarget(
+        if isTargetingPlayer {
+            let action = SKAction.shootToTarget(
                 node: view,
                 target: (parent as! GameScene).playerController.view,
                 parent: parent,
                 speed: SPEED
             )
+            view.run(action)
+        } else {
+            view.physicsBody?.velocity = CGVector(dx: 0, dy: -SPEED)
         }
-        view.run(.sequence([action, .removeFromParent()]))
         self.parent.run(SoundController.ENEMY_SHOOT)
     }
 }

@@ -16,53 +16,61 @@ class EnemyDiagonalBulletController: EnemyBulletController {
     }
     
     required init() {
-    
+        
     }
     
-    func spawnBullet(of plane: View, isFromLeft: Bool) {
+    func set(customTexture: SKTexture?, isTargetingPlayer: Bool, isFromLeft: Bool) {
+        if customTexture != nil {
+            self.texture = customTexture
+        } else {
+            self.texture = Textures.bullet_round
+        }
+        self.isTargetingPlayer = isTargetingPlayer
         self.isFromLeft = isFromLeft
-        view = View(texture: texture)
-        self.plane = plane
-        config()
-        view = nil
+        self.view = View(texture: texture)
     }
     
     override func configProperties() {
         view.name = "enemy_bullet"
         switch isFromLeft {
         case true:
-            view.position = plane.position.add(
-                x: plane.width / 2 + view.width / 2,
-                y: -plane.height / 2 - view.height / 2
+            view.position = planeController.position.add(
+                x: planeController.width / 2 + view.width / 2,
+                y: -planeController.height / 2 - view.height / 2
             )
             
         case false:
-            view.position = plane.position.add(
-                x: -plane.width / 2 - view.width / 2,
-                y: -plane.height / 2 - view.height / 2
+            view.position = planeController.position.add(
+                x: -planeController.width / 2 - view.width / 2,
+                y: -planeController.height / 2 - view.height / 2
             )
         }
     }
     
     override func configActions() {
-        let action: SKAction
         if isTargetingPlayer {
-            action = SKAction.shootToTarget(
+            let action = SKAction.shootToTarget(
                 node: view,
                 target: (parent as! GameScene).playerController.view,
                 parent: parent,
                 speed: SPEED
             )
+            view.run(action)
         } else {
             switch isFromLeft {
             case true:
-                action = SKAction.moveDiagonallyToBottomRigt(node: view, speed: SPEED)
+                view.physicsBody?.velocity = CGVector(
+                    dx: SPEED * -sin(-CGFloat.pi * 3 / 4),
+                    dy: SPEED * cos(-CGFloat.pi * 3 / 4)
+                )
                 
             case false:
-                action = SKAction.moveDiagonallyToBottomLeft(node: view, speed: SPEED)
+                view.physicsBody?.velocity = CGVector(
+                    dx: SPEED * -sin(CGFloat.pi * 3 / 4),
+                    dy: SPEED * cos(CGFloat.pi * 3 / 4)
+                )
             }
         }
-        view.run(.repeatForever(.sequence([action, SKAction.removeFromParent()])))
         parent.run(SKAction.playSoundFileNamed("enemy_shoot", waitForCompletion: false))
         print(SPEED)
     }
