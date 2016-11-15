@@ -8,90 +8,54 @@
 import SpriteKit
 import Foundation
 
-class PlayerMultipleBulletsController {
-    weak var parent: SKScene!
-    weak var playerController: PlayerController!
-    var numberOfBullets: Int!
+class PlayerMultipleBulletsController: PlayerBulletController {
     var views = [View]()
-    var SPEED: CGFloat! = 300
+    var angle: CGFloat! = CGFloat.pi / 24
+    var scale: CGFloat!
     
-    init(parent: SKScene, playerController: PlayerController) {
-        self.parent = parent
-        self.playerController = playerController
-        self.numberOfBullets = playerController.powerLevel
-    }
+    required init() {}
     
     deinit {
         print("bye Player Multiple Bullets Controller")
     }
     
-    func spawnBullet(customTexture: SKTexture?, customSpeed: CGFloat?, customAngle: CGFloat?, scale: CGFloat) {
-        if customSpeed != nil {
-            self.SPEED = customSpeed
-        }
-        
-        let texture: SKTexture
-        if customTexture != nil {
-            texture = customTexture!
-        } else {
-            texture = Textures.bullet_double
-        }
-        
-        var angle: CGFloat
-        if customAngle != nil {
-            angle = customAngle!
-        } else {
-            angle = CGFloat.pi / 24
-        }
-        
+    func spawnBullet() {
+        self.spawnBullet(scale: 1)
+    }
+    
+    func spawnBullet(scale: CGFloat) {
+        self.scale = scale
         for _ in 0...1 {
-            let view = View(texture: texture)
-            config(view: view, angle: angle, scale: scale)
+            view = View(texture: texture)
+            config()
             views.append(view)
             angle = -angle
         }
-        if numberOfBullets == 3 {
-            let view = View(texture: texture)
-            config(view: view, angle: 0, scale: scale)
+        
+        if (self.planeController as! PlayerController).powerLevel == 3 {
+            angle = 0
+            view = View(texture: texture)
+            config()
             views.append(view)
         }
+
         for view in views {
             parent.addChild(view)
         }
         self.parent.run(SoundController.PLAYER_SHOOT)
     }
     
-    func config(view: View, angle: CGFloat, scale: CGFloat) {
-        configProperties(view: view, scale: scale)
-        configPhysics(view: view)
-        configActions(view: view, angle: angle)
-        configOnContact(view: view)
-    }
-    
-    func configProperties(view: View, scale: CGFloat) {
+    override func configProperties() {
         view.setScale(scale)
         view.name = "player_multiple_bullet"
-        view.position = playerController.position.add(
+        view.position = planeController.position.add(
             x: 0,
-            y: playerController.height / 4
+            y: planeController.height / 4
         )
+        view.zRotation = angle
     }
     
-    func configPhysics(view: View) {
-        view.physicsBody = SKPhysicsBody(texture: view.texture!, size: view.size)
-        view.physicsBody?.categoryBitMask = BitMask.playerBullet.rawValue
-        view.physicsBody?.contactTestBitMask = BitMask.enemy.rawValue | BitMask.wall.rawValue
-        view.physicsBody?.collisionBitMask = 0
-    }
-    
-    func configActions(view: View, angle: CGFloat) {
+    override func configActions() {
         view.physicsBody?.velocity = CGVector(dx: -sin(angle) * SPEED, dy: cos(angle) * SPEED)
     }
-    
-    func configOnContact(view: View) {
-        view.onContact = { [unowned view] other in
-            view.removeFromParent()
-        }
-    }
-    
 }

@@ -28,6 +28,7 @@ extension BulletController {
     
     func spawnBullet() {
         config()
+        parent.addChild(view)
     }
     
     func spawnBullet(scale: CGFloat) {
@@ -37,6 +38,7 @@ extension BulletController {
     
     func config() {
         // Properties
+        view.zPosition = -1
         configProperties()
         
         // Physics
@@ -48,8 +50,6 @@ extension BulletController {
         
         // On Contact
         configOnContact()
-        
-        parent.addChild(view)
     }
     
     func configOnContact() {

@@ -21,6 +21,8 @@ struct BitMask: OptionSet {
 }
 
 struct Textures {
+    static let sharedInstance = Textures()
+    
     static let bullet_single = SKTexture(image: #imageLiteral(resourceName: "bullet-single"))
     static let bullet_round = SKTexture(image: #imageLiteral(resourceName: "bullet-round"))
     static let bullet_double = SKTexture(image: #imageLiteral(resourceName: "bullet-double"))

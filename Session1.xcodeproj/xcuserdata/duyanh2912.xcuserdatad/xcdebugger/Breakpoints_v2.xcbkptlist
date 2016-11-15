@@ -104,11 +104,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Session1/PlaneController.swift"
-            timestampString = "500756073.629192"
+            timestampString = "500925818.419901"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "18"
-            endingLineNumber = "18"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
             landmarkName = "PlaneController"
             landmarkType = "5">
          </BreakpointContent>
@@ -120,11 +120,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Session1/PowerupController.swift"
-            timestampString = "500874289.889485"
+            timestampString = "500925818.419901"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
             landmarkName = "set(position:customSpeed:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -136,11 +136,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Session1/PowerupController.swift"
-            timestampString = "500874289.889485"
+            timestampString = "500925818.419901"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "23"
-            endingLineNumber = "23"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
             landmarkName = "set(position:customSpeed:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -200,12 +200,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Session1/EnemyController.swift"
-            timestampString = "500874129.059818"
+            timestampString = "500926126.456401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
-            landmarkName = "configOnContact()"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "shootAction()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -216,12 +216,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Session1/EnemyController.swift"
-            timestampString = "500874129.059818"
+            timestampString = "500926126.456401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
-            landmarkName = "configOnContact()"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "shootAction()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

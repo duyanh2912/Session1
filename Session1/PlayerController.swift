@@ -51,7 +51,6 @@ class PlayerController: PlaneController {
     
     func configProperties() {
         view.position = CGPoint(x: parent.frame.midX, y: view.height / 2)
-        view.zPosition = 1
         view.name = "player"
         
         // chặn không cho máy bay ra khỏi màn hình
@@ -73,13 +72,14 @@ class PlayerController: PlaneController {
         if powerLevel == 1 {
             addBullet = SKAction.run { [unowned self] in
                 let bulletController = PlayerBulletController(planeController: self)
-                bulletController.set(customTexture: self.texture)
+                bulletController.set(customTexture: nil)
                 bulletController.spawnBullet(scale: 0.25)
             }
         } else {
             addBullet = SKAction.run { [unowned self] in
-                let bulletController = PlayerMultipleBulletsController(parent: self.parent, playerController: self)
-                bulletController.spawnBullet(customTexture: self.texture, customSpeed: nil, customAngle: CGFloat.pi/48, scale: 0.25)
+                let bulletController = PlayerMultipleBulletsController(planeController: self)
+                bulletController.set(customTexture: nil)
+                bulletController.spawnBullet(scale: 0.25)
             }
         }
         let delay = SKAction.wait(forDuration: self.FIRING_INTERVAL)
@@ -107,7 +107,9 @@ class PlayerController: PlaneController {
     }
     
     func powerup() {
-        guard powerLevel < 3 else { return }
+        guard powerLevel < 3 else {
+            (parent as? GameScene)?.score += 30
+            return }
         powerLevel += 1
         FIRING_INTERVAL = FIRING_INTERVAL * 0.75
         self.parent.run(SoundController.POWERUP)

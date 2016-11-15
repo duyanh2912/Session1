@@ -63,11 +63,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
         // và tiếng ko ổn định
         configPhysics()
         addBackground()
-        addPlayer()
-        addEnemies()
-        addHpLabel()
-        addScoreLabel()
-        addHardcoreLabel()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [unowned self] in
+            self.addPlayer()
+            self.addEnemies()
+            self.addHpLabel()
+            self.addScoreLabel()
+            self.addHardcoreLabel()
+//        }
     }
     
     func addSoundController() {
@@ -165,12 +167,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
         
         background1.anchorPoint = CGPoint.zero
         background1.position = CGPoint.zero
-        background1.zPosition = -1
+        background1.zPosition = -20
         self.addChild(background1)
         
         background2.anchorPoint = CGPoint.zero
         background2.position = CGPoint(x: 0, y: background1.size.height - 1)
-        background2.zPosition = -1
+        background2.zPosition = -20
         self.addChild(background2)
         
         background1.blendMode = .replace
@@ -214,7 +216,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     
     func addPlayer() {
         playerController = PlayerController(parent: self)
-        playerController.set(customTexture: nil)
+        playerController.set(customTexture: Textures.plane3)
         playerController.FIRING_INTERVAL = 0.5
         playerController.spawnPlayer()
     }
