@@ -62,8 +62,7 @@ class EnemyController: PlaneController {
     
     func flyAction() {
         // Fly Action
-        let flyAction = SKAction.moveToBottom(node: view!, speed: SPEED)
-        self.view.run(.sequence([flyAction, SKAction.removeFromParent()]))
+        view.physicsBody?.velocity = CGVector(dx: 0, dy: -SPEED)
     }
     
     func shootAction() {
@@ -85,15 +84,19 @@ class EnemyController: PlaneController {
                 scene.explosionController.explode(at: self.view)
                 scene.score += 10
                 
+                let position = self.position
                 // Randomize
-                if arc4random_uniform(10) == 0 {
-                    let powerupController = PowerupController(parent: self.parent)
-                    print(self.position)
-                    powerupController.set(position: self.position, customSpeed: nil)
-                    powerupController.spawnPowerup()
+                DispatchQueue.global().async { [unowned scene] in
+                    if arc4random_uniform(UInt32(LuckRate.powerup)) == 0 {
+                        print(LuckRate.powerup)
+                        let powerupController = PowerupController(parent: scene)
+                        powerupController.set(position: position, customSpeed: nil)
+                        DispatchQueue.main.async {
+                            powerupController.spawnPowerup()
+                        }
+                    }
                 }
             }
-            
             self.view.removeFromParent()
             self.removeFromEnemyGenerator()
         }

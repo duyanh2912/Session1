@@ -12,10 +12,11 @@ class PlayerController: PlaneController {
     var view: View!
     var SPEED: CGFloat! = 80
     weak var parent: SKScene!
+    var capHp = 10
     var hp = 10 {
         didSet {
             let scene = parent as? GameScene
-            scene?.hpLabel.text = "HP: \(self.hp)"
+            scene?.hpLabel.text = "HP: \(hp)"
             scene?.hpLabelBlock.size = (scene?.hpLabel.frame.size.add(dWidth: 6, dHeight: 6))!
         }
     }
@@ -72,14 +73,14 @@ class PlayerController: PlaneController {
         if powerLevel == 1 {
             addBullet = SKAction.run { [unowned self] in
                 let bulletController = PlayerBulletController(planeController: self)
-                bulletController.set(customTexture: nil)
-                bulletController.spawnBullet()
+                bulletController.set(customTexture: self.texture)
+                bulletController.spawnBullet(scale: 0.25)
             }
         } else {
             addBullet = SKAction.run { [unowned self] in
                 let bulletController = PlayerMultipleBulletsController(planeController: self)
-                bulletController.set(customTexture: nil)
-                bulletController.spawnBullet()
+                bulletController.set(customTexture: self.texture)
+                bulletController.spawnStraightBullet(scale: 0.25)
             }
         }
         let delay = SKAction.wait(forDuration: self.FIRING_INTERVAL)
@@ -109,10 +110,20 @@ class PlayerController: PlaneController {
     func powerup() {
         guard powerLevel < 3 else {
             (parent as? GameScene)?.score += 30
-            return }
+            self.heal()
+            return
+        }
         powerLevel += 1
         FIRING_INTERVAL = FIRING_INTERVAL * 0.75
         self.parent.run(SoundController.POWERUP)
+    }
+    
+    func heal() {
+        guard self.hp < self.capHp else { return }
+        hp += 1
+        if let fire = view.childNode(withName: "fire") {
+            fire.removeFromParent()
+        }
     }
     
     func die() {
@@ -134,6 +145,7 @@ class PlayerController: PlaneController {
     func ignite(at contact: SKPhysicsContact) {
         self.parent.run(SoundController.PLAYER_HIT)
         let emitter = SKEmitterNode(fileNamed: "Fire")
+        emitter?.name = "fire"
         emitter?.position = contact.contactPoint.positionRelative(to: (self.view)!)
         emitter?.targetNode = self.parent
         self.view.addChild(emitter!)

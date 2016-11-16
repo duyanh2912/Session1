@@ -45,13 +45,11 @@ class EnemyDiagonalController: EnemyController {
     
     override func flyAction() {
         // Fly Action
-        let move: SKAction
         if isFromLeft {
-            move = SKAction.moveDiagonallyToBottomRigt(node: view, speed: SPEED)
+            view.physicsBody?.velocity = CGVector(dx: SPEED * -sin(CGFloat.pi * -3 / 4), dy: SPEED * cos(CGFloat.pi * -3 / 4))
         } else {
-            move = SKAction.moveDiagonallyToBottomLeft(node: view, speed: SPEED)
+            view.physicsBody?.velocity = CGVector(dx: SPEED * -sin(CGFloat.pi * 3 / 4), dy: SPEED * cos(CGFloat.pi * 3 / 4))
         }
-        view.run(.sequence([move, SKAction.removeFromParent()]))
     }
     
     override func shootAction() {

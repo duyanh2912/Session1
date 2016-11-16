@@ -26,14 +26,11 @@ extension BulletController {
         self.planeController.activeBulletControllers.append(self)
     }
     
-    func spawnBullet() {
+    func spawnBullet(scale: CGFloat = 1) {
+        self.view = View(texture: texture)
+        self.view.setScale(scale)
         config()
         parent.addChild(view)
-    }
-    
-    func spawnBullet(scale: CGFloat) {
-        self.view.setScale(scale)
-        self.spawnBullet()
     }
     
     func config() {
@@ -43,6 +40,7 @@ extension BulletController {
         
         // Physics
         view.physicsBody = SKPhysicsBody(texture: view.texture!, size: view.size)
+        view.physicsBody?.linearDamping = 0
         configPhysics()
         
         // Action

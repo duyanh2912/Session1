@@ -24,6 +24,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
                 hardcoreLabel.text = "Hardcore: off"
             }
             hardcoreLabelBlock.size = hardcoreLabel.frame.size.add(dWidth: 6, dHeight: 6)
+            
+            if hardcoreMode == true {
+                LuckRate.powerup *= 2
+            } else {
+                LuckRate.powerup /= 2
+            }
         }
     }
     var hardcoreLabel: SKLabelNode!
@@ -58,9 +64,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     
     override func didMove(to view: SKView) {
         addExplosionController()
-        addSoundController()
-        // Phải có 1 instance của SoundController nếu ko sẽ bị mất tiếng nổ
-        // và tiếng ko ổn định
         configPhysics()
         addBackground()
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [unowned self] in
@@ -70,10 +73,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
             self.addScoreLabel()
             self.addHardcoreLabel()
 //        }
-    }
-    
-    func addSoundController() {
-//        soundController = SoundController()
     }
     
     func addExplosionController() {

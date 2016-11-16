@@ -8,6 +8,11 @@
 import SpriteKit
 import Foundation
 
+struct LuckRate {
+    // Luck rate is 1/ n
+    static var powerup: UInt32 = 10
+}
+
 struct BitMask: OptionSet {
     let rawValue: UInt32
     

@@ -27,6 +27,7 @@ extension PlaneController {
         
         // Plane's Physics
         view.physicsBody = SKPhysicsBody(texture: view.texture!, size: view.size.scaled(by: 0.9))
+        view.physicsBody?.linearDamping = 0
         configPhysics()
         
         // Action

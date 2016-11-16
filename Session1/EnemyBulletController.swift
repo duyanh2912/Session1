@@ -46,7 +46,6 @@ class EnemyBulletController: BulletController {
             self.texture = Textures.bullet_round
         }
         self.isTargetingPlayer = isTargetingPlayer
-        self.view = View(texture: texture)
     }
     
     func configProperties() {

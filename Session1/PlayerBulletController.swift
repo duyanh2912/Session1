@@ -21,9 +21,8 @@ class PlayerBulletController: BulletController {
         if customTexture != nil {
             self.texture = customTexture
         } else {
-            self.texture = Textures.bullet_double
+            self.texture = Textures.bullet_single
         }
-        self.view = View(texture: texture)
     }
     
     deinit {

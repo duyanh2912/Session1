@@ -10,7 +10,7 @@ import Foundation
 
 class PlayerMultipleBulletsController: PlayerBulletController {
     var views = [View]()
-    var angle: CGFloat! = CGFloat.pi / 24
+    var angle: CGFloat! = CGFloat.pi / 48
     var scale: CGFloat!
     
     required init() {}
@@ -21,6 +21,13 @@ class PlayerMultipleBulletsController: PlayerBulletController {
     
     func spawnBullet() {
         self.spawnBullet(scale: 1)
+    }
+    
+    func spawnStraightBullet(scale: CGFloat = 1) {
+        angle = 0
+        self.spawnBullet(scale: scale)
+        views[0].position = views[0].position.add(x: planeController.width / 4, y: 0)
+        views[1].position = views[1].position.add(x: -planeController.width / 4, y: 0)
     }
     
     func spawnBullet(scale: CGFloat) {

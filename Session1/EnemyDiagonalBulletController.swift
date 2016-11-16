@@ -27,7 +27,6 @@ class EnemyDiagonalBulletController: EnemyBulletController {
         }
         self.isTargetingPlayer = isTargetingPlayer
         self.isFromLeft = isFromLeft
-        self.view = View(texture: texture)
     }
     
     override func configProperties() {
