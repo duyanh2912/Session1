@@ -73,13 +73,13 @@ class PlayerController: PlaneController {
             addBullet = SKAction.run { [unowned self] in
                 let bulletController = PlayerBulletController(planeController: self)
                 bulletController.set(customTexture: nil)
-                bulletController.spawnBullet(scale: 0.25)
+                bulletController.spawnBullet()
             }
         } else {
             addBullet = SKAction.run { [unowned self] in
                 let bulletController = PlayerMultipleBulletsController(planeController: self)
                 bulletController.set(customTexture: nil)
-                bulletController.spawnBullet(scale: 0.25)
+                bulletController.spawnBullet()
             }
         }
         let delay = SKAction.wait(forDuration: self.FIRING_INTERVAL)
