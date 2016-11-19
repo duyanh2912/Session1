@@ -7,11 +7,13 @@
 //
 import SpriteKit
 import Foundation
-class PlayerController: PlaneController {
+class PlayerController: PlaneController, Shootable {
     var texture: SKTexture!
     var view: View!
-    var SPEED: CGFloat! = 80
+    var initialPosition: CGPoint!
     weak var parent: SKScene!
+    
+    var SPEED: CGFloat! = 80
     var capHp = 10
     var hp = 10 {
         didSet {
@@ -44,6 +46,7 @@ class PlayerController: PlaneController {
     func spawnPlayer() {
         view = View(texture: texture)
         config()
+        parent.addChild(view)
     }
     
     deinit {
@@ -67,7 +70,7 @@ class PlayerController: PlaneController {
         view.physicsBody?.collisionBitMask = 0
     }
     
-    func shootAction() {
+    func shoot() {
         let addBullet: SKAction
         
         if powerLevel == 1 {
@@ -87,22 +90,26 @@ class PlayerController: PlaneController {
         self.view.run(.repeatForever(.sequence([addBullet, delay])))
     }
     
-    func flyAction() {}
+    func fly() {}
     
     func configOnContact() {
         view.onContact = { [weak self] (other, contact) in
-            if (other as? SKNode)?.physicsBody?.categoryBitMask == BitMask.powerup.rawValue {
-                self?.powerup()
-                return
-            }
+            guard let bitMask = (other as? SKNode)?.physicsBody?.categoryBitMask else { return }
             
-            self?.hp -= 1
-            if (self?.hp)! == 0 {
-                // die bitch
-                self?.die()
+            if bitMask == BitMask.powerup.rawValue {
+                self?.powerup()
+            } else if bitMask == BitMask.livesUp.rawValue {
+                self?.heal()
+                
             } else {
-                // máy bay cháy
-                self?.ignite(at: contact)
+                self?.hp -= 1
+                if (self?.hp)! == 0 {
+                    // die bitch
+                    self?.die()
+                } else {
+                    // máy bay cháy
+                    self?.ignite(at: contact)
+                }
             }
         }
     }
@@ -110,7 +117,6 @@ class PlayerController: PlaneController {
     func powerup() {
         guard powerLevel < 3 else {
             (parent as? GameScene)?.score += 30
-            self.heal()
             return
         }
         powerLevel += 1
@@ -120,15 +126,15 @@ class PlayerController: PlaneController {
     
     func heal() {
         guard self.hp < self.capHp else { return }
-        hp += 1
-        if let fire = view.childNode(withName: "fire") {
-            fire.removeFromParent()
+        hp = capHp
+        while view.childNode(withName: "fire") != nil {
+            view.childNode(withName: "fire")!.removeFromParent()
         }
     }
     
     func die() {
         self.view.removeFromParent()
-        
+        (parent as? GameScene)?.audioPlayer?.stop()
         let explosionController = (self.parent as! GameScene).explosionController!
         explosionController.explode(at: (self.view)!)
         
@@ -161,6 +167,10 @@ class PlayerController: PlaneController {
         let time = Double(distance / SPEED)
         
         view.run(.move(by: vector, duration: time))
+    }
+    
+    func configActions() {
+        shoot()
     }
 }
 

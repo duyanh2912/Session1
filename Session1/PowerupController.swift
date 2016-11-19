@@ -9,10 +9,12 @@ import SpriteKit
 import Foundation
 
 class PowerupController: BoosterController {
+    var texture: SKTexture! = Textures.powerup
     var view: View!
-    var parent: SKScene!
     var initialPosition: CGPoint!
-    var SPEED: CGFloat = 120
+    weak var parent: SKScene!
+    
+    var SPEED: CGFloat! = 120
     
     init(parent: SKScene) {
         self.parent = parent
@@ -24,12 +26,13 @@ class PowerupController: BoosterController {
         if customSpeed != nil {
             self.SPEED = customSpeed!
         }
-        view = View(texture: Textures.powerup)
-        view.setScale(0.25)
     }
     
-    func spawnPowerup() {
+    func spawn() {
+        view = View(texture: texture)
+        view.setScale(0.25)
         config()
+        parent.addChild(self.view)
     }
     
     func configProperties() {
@@ -38,12 +41,21 @@ class PowerupController: BoosterController {
     }
     
     func configPhysics() {
+        view.physicsBody = SKPhysicsBody(texture: view.texture!, size: view.size)
         view.physicsBody?.categoryBitMask = BitMask.powerup.rawValue
         view.physicsBody?.collisionBitMask = 0
         view.physicsBody?.contactTestBitMask = BitMask.player.rawValue | BitMask.wall.rawValue
     }
     
-    func configActions() {
+    func fly() {
         view.physicsBody?.velocity = CGVector(dx: 0, dy: -SPEED)
+    }
+    
+    func configOnContact() {
+        if let view = self.view {
+            view.onContact = { [unowned view] other in
+                view.removeFromParent()
+            }
+        }
     }
 }

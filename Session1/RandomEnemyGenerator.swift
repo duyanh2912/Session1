@@ -13,11 +13,11 @@ class RandomEnemyGenerator {
     var hardcoreMode = false {
         didSet {
             for enemyController in RandomEnemyGenerator.activeEnemyControllers {
-                enemyController.isTargetingPlayer = self.hardcoreMode
+                (enemyController as? EnemyController)?.isTargetingPlayer = self.hardcoreMode
             }
         }
     }
-    static var activeEnemyControllers = [EnemyController]()
+    static var activeEnemyControllers = [PlaneController]()
     
     deinit {
         print("bye Random Enemy Generator")
@@ -31,7 +31,7 @@ class RandomEnemyGenerator {
     func generate(interval: Double) {
         let add = SKAction.run { [unowned self] in
             let i = Int(arc4random_uniform(UInt32(EnemyType.types.count)))
-            let enemyController: EnemyController
+            var enemyController: PlaneController
             switch EnemyType.types[i] {
                 
             case EnemyType.enemy_green_1:
@@ -46,20 +46,20 @@ class RandomEnemyGenerator {
                 enemyController = EnemyAnimatedController(parent: self.parent)
                 (enemyController as! EnemyAnimatedController).set(customAnimation: EnemyType.types[i].rawValue)
             
-            case EnemyType.plane1:
+            case EnemyType.enemy_green_3:
                 enemyController = EnemyController(parent: self.parent)
-                enemyController.set(customTexture: Textures.plane1)
+                (enemyController as! EnemyController).set(customTexture: nil)
                 
             default:
-                enemyController = EnemyController(parent: self.parent)
-                enemyController.set(customTexture: nil)
+                enemyController = GiftPlaneController(parent: self.parent)
+                (enemyController as! GiftPlaneController).set(customTexture: nil)
             }
-            enemyController.isTargetingPlayer = self.hardcoreMode
-            if self.hardcoreMode {
-                enemyController.FIRING_INTERVAL = enemyController.FIRING_INTERVAL / 2
-            }
-            enemyController.spawnEnemy()
             
+            (enemyController as? EnemyController)?.isTargetingPlayer = self.hardcoreMode
+            if self.hardcoreMode {
+                (enemyController as? EnemyController)?.FIRING_INTERVAL = ((enemyController as? EnemyController)?.FIRING_INTERVAL)! / 2
+            }
+            enemyController.spawn()
         }
         let delay = SKAction.wait(forDuration: interval)
         parent.run(.repeatForever(.sequence([add, delay])))

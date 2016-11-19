@@ -12,17 +12,18 @@ class PlayerBulletController: BulletController {
     var texture: SKTexture!
     var view: View!
     var SPEED: CGFloat! = 300
+    var initialPosition: CGPoint!
     weak var parent: SKScene!
     weak var planeController: PlaneController!
     
     required init() {}
     
-    func set(customTexture: SKTexture?) {
-        if customTexture != nil {
-            self.texture = customTexture
-        } else {
-            self.texture = Textures.bullet_single
-        }
+    func set(customPosition: CGPoint? = nil, customTexture: SKTexture = Textures.bullet_single) {
+        self.texture = customTexture
+        self.initialPosition = customPosition ?? planeController.position.add(
+            x: 0,
+            y: planeController.height / 4
+        )
     }
     
     deinit {
@@ -31,9 +32,7 @@ class PlayerBulletController: BulletController {
     
     func configProperties() {
         view.name = "player_bullet"
-        view.position = planeController.position.add(
-            x: 0,
-            y: planeController.height / 4 )
+        view.position = initialPosition
     }
     
     func configPhysics() {
@@ -42,7 +41,7 @@ class PlayerBulletController: BulletController {
         view.physicsBody?.collisionBitMask = 0
     }
     
-    func configActions() {
+    func fly() {
         // Action
         view.physicsBody?.velocity = CGVector(dx: 0, dy: SPEED)
         self.parent.run(SoundController.PLAYER_SHOOT)

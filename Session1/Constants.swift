@@ -22,7 +22,7 @@ struct BitMask: OptionSet {
     static let enemyBullet = BitMask(rawValue: 1 << 3)
     static let wall = BitMask(rawValue: 1 << 4)
     static let powerup = BitMask(rawValue: 1 << 5)
-    
+    static let livesUp = BitMask(rawValue: 1 << 6)
 }
 
 struct Textures {
@@ -42,6 +42,7 @@ struct Textures {
     static let plane4 = SKTexture(imageNamed: "player_image/plane4")
     
     static let powerup = SKTexture(image: #imageLiteral(resourceName: "200px-FireFlowerMK8"))
+    static let lives_up = SKTexture(image: #imageLiteral(resourceName: "1_up"))
 }
 
 enum EnemyType: String {

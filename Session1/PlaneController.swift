@@ -8,16 +8,8 @@
 import SpriteKit
 import Foundation
 
-protocol PlaneController: Controller {
-    var view: View! { get set }
-    var texture: SKTexture! { get set }
+protocol PlaneController: Controller, Flyable {
     var SPEED: CGFloat! { get set }
-    weak var parent: SKScene! { get set }
-    var FIRING_INTERVAL: Double! { get set }
-    var activeBulletControllers: [BulletController] { get set }
-    
-    func flyAction()
-    func shootAction()
 }
 
 extension PlaneController {
@@ -35,12 +27,11 @@ extension PlaneController {
         
         // Config plane's onContact
         configOnContact()
-        
-        parent.addChild(view)
     }
     
-    func configActions() {
-        flyAction()
-        shootAction()
+    func spawn() {
+        view = View(texture: texture)
+        config()
+        parent.addChild(view)
     }
 }

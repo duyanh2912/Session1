@@ -7,7 +7,7 @@
 //
 import SpriteKit
 import Foundation
-class EnemyAnimatedController: EnemyController {
+class EnemyAnimatedController: EnemyController, Animated {
     var textures = [SKTexture]()
     var atlas: SKTextureAtlas!
     
@@ -26,14 +26,20 @@ class EnemyAnimatedController: EnemyController {
         texture = textures[0]
     }
     
-    func configActions() {
-        
-        super.configActions()
+    override func configActions() {
+        fly()
+        shoot()
+        animate()
     }
     
-    override func flyAction() {
+//    override func fly() {
+//        super.fly()
+//        animate()
+//    }
+    
+    func animate() {
+        print("animate")
         view?.run(.repeatForever(SKAction.animate(with: textures, timePerFrame: 0.05)))
-        super.flyAction()
     }
     
     deinit {

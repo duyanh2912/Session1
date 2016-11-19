@@ -13,8 +13,6 @@ class PlayerMultipleBulletsController: PlayerBulletController {
     var angle: CGFloat! = CGFloat.pi / 48
     var scale: CGFloat!
     
-    required init() {}
-    
     deinit {
         print("bye Player Multiple Bullets Controller")
     }
@@ -62,7 +60,7 @@ class PlayerMultipleBulletsController: PlayerBulletController {
         view.zRotation = angle
     }
     
-    override func configActions() {
+    override func fly() {
         view.physicsBody?.velocity = CGVector(dx: -sin(angle) * SPEED, dy: cos(angle) * SPEED)
     }
 }

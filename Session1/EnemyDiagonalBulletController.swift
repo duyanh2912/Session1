@@ -46,7 +46,7 @@ class EnemyDiagonalBulletController: EnemyBulletController {
         }
     }
     
-    override func configActions() {
+    override func fly() {
         if isTargetingPlayer {
             let action = SKAction.shootToTarget(
                 node: view,
@@ -54,7 +54,7 @@ class EnemyDiagonalBulletController: EnemyBulletController {
                 parent: parent,
                 speed: SPEED
             )
-            view.run(action)
+             view.run(.sequence([action, .removeFromParent()]))
         } else {
             switch isFromLeft {
             case true:
@@ -71,6 +71,5 @@ class EnemyDiagonalBulletController: EnemyBulletController {
             }
         }
         parent.run(SKAction.playSoundFileNamed("enemy_shoot", waitForCompletion: false))
-        print(SPEED)
     }
 }

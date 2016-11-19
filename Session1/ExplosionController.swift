@@ -7,37 +7,32 @@
 //
 import SpriteKit
 import Foundation
-class ExplosionController: Controller {
+class ExplosionController: Controller, Animated {
+    var texture: SKTexture!
+    var view: View!
+    var initialPosition: CGPoint!
+    weak var parent: SKScene!
     
     let atlas = SKTextureAtlas(named: "explosion")
     var textures = [SKTexture]()
     let time: Double = 0.5
-    var view: View!
-    weak var plane: SKSpriteNode!
-    weak var parent: SKScene!
+    weak var plane: View!
     
     init(parent: SKScene) {
         self.parent = parent
-        
         
         let textureNamesSorted = atlas.textureNames.sorted()
         for textureName in textureNamesSorted {
             textures.append(atlas.textureNamed(textureName))
         }
-        
-        view = View(texture: textures[0])
     }
     
-    func explode(at plane: SKSpriteNode) {
+    func explode(at plane: View, scale: CGFloat = 1) {
         self.plane = plane
         view = View(texture: textures[0])
-        config()
-//        explodeAction(completion: completion)
-    }
-    
-    func explode(at plane: SKSpriteNode, scale: CGFloat) {
-        explode(at: plane)
         view.setScale(scale)
+        config()
+        parent.addChild(view)
     }
     
     func configProperties() {
@@ -48,25 +43,15 @@ class ExplosionController: Controller {
     func configPhysics() {}
     
     func configActions() {
+        animate()
+    }
+    
+    func animate() {
         let animate = SKAction.animate(
             with: textures,
             timePerFrame: time / Double(textures.count)
         )
         view.run(.sequence([animate, .removeFromParent()]))
-        self.parent.run(SoundController.EXPLOSION)
-    }
-    
-    func explodeAction(completion: (() -> Void)?) {
-        let animate = SKAction.animate(
-            with: textures,
-            timePerFrame: time / Double(textures.count)
-        )
-        if completion != nil {
-            view.run(.sequence([animate, .removeFromParent()]), completion: completion!)
-        } else {
-            view.run(.sequence([animate, .removeFromParent()]))
-        }
-        
         self.parent.run(SoundController.EXPLOSION)
     }
 
@@ -75,6 +60,4 @@ class ExplosionController: Controller {
     deinit {
         print("bye Explosion Controller")
     }
-    
-   
 }

@@ -10,6 +10,7 @@ import SpriteKit
 import GameKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
+    var audioPlayer: AVAudioPlayer?
     var onContact: OnContactType? = nil
     let fontSize: CGFloat = 30
     
@@ -63,16 +64,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     }
     
     override func didMove(to view: SKView) {
+//        playMusic()
         addExplosionController()
         configPhysics()
         addBackground()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [unowned self] in
-            self.addPlayer()
-            self.addEnemies()
-            self.addHpLabel()
-            self.addScoreLabel()
-            self.addHardcoreLabel()
-//        }
+        addPlayer()
+        addEnemies()
+        addHpLabel()
+        addScoreLabel()
+        addHardcoreLabel()
+    }
+    
+    func playMusic() {
+        if let path = Bundle.main.url(forResource: "background", withExtension: "mp3") {
+            audioPlayer = try! AVAudioPlayer(contentsOf: path)
+            audioPlayer?.volume = 0.5
+            audioPlayer?.play()
+        }
     }
     
     func addExplosionController() {

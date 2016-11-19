@@ -8,22 +8,21 @@
 import SpriteKit
 import Foundation
 
-protocol BulletController: Controller {
-    var texture: SKTexture! { get set }
-    var view: View! { get set }
+protocol BulletController: Controller, Flyable {
     var SPEED: CGFloat! { get set }
-    weak var parent: SKScene! { get set }
     weak var planeController: PlaneController! { get set }
     
     init()
-  }
+}
 
 extension BulletController {
     init(planeController: PlaneController) {
         self.init()
         self.planeController = planeController
         self.parent = planeController.parent
-        self.planeController.activeBulletControllers.append(self)
+        
+        var shootable = planeController as! Shootable
+        shootable.activeBulletControllers.append(self)
     }
     
     func spawnBullet(scale: CGFloat = 1) {
@@ -50,6 +49,10 @@ extension BulletController {
         configOnContact()
     }
     
+    func configActions() {
+        fly()
+    }
+    
     func configOnContact() {
         let bullet = self.view!
         
@@ -61,8 +64,9 @@ extension BulletController {
     }
     
     func removeFromPlaneController() {
-        if let index = planeController.activeBulletControllers.index(where: { $0 === self }) {
-            planeController.activeBulletControllers.remove(at: index)
+        var shootable = planeController as! Shootable
+        if let index = shootable.activeBulletControllers.index(where: { $0 === self }) {
+            shootable.activeBulletControllers.remove(at: index)
         }
     }
 }

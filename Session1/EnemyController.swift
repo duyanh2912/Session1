@@ -8,11 +8,13 @@
 import SpriteKit
 import Foundation
 
-class EnemyController: PlaneController {
+class EnemyController: PlaneController, Shootable, CanTargetPlayer {
     var texture: SKTexture!
     var view: View!
-    var SPEED: CGFloat! = 160
+    var initialPosition: CGPoint!
     weak var parent: SKScene!
+    
+    var SPEED: CGFloat! = 160
     var FIRING_INTERVAL: Double! = 1
     var isTargetingPlayer = false {
         didSet {
@@ -49,9 +51,10 @@ class EnemyController: PlaneController {
         }
     }
     
-    func spawnEnemy() {
+    func spawn() {
         view = View(texture: texture)
         config()
+        parent.addChild(view)
     }
     
     func configPhysics() {
@@ -60,12 +63,17 @@ class EnemyController: PlaneController {
         view?.physicsBody?.collisionBitMask = 0
     }
     
-    func flyAction() {
+    func configActions() {
+        fly()
+        shoot()
+    }
+    
+    func fly() {
         // Fly Action
         view.physicsBody?.velocity = CGVector(dx: 0, dy: -SPEED)
     }
     
-    func shootAction() {
+    func shoot() {
         // Shoot Action
         let addBullet = SKAction.run { [unowned self] in
             let bulletController = EnemyBulletController(planeController: self)
@@ -92,7 +100,7 @@ class EnemyController: PlaneController {
                         let powerupController = PowerupController(parent: scene)
                         powerupController.set(position: position, customSpeed: nil)
                         DispatchQueue.main.async {
-                            powerupController.spawnPowerup()
+                            powerupController.spawn()
                         }
                     }
                 }

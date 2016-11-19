@@ -8,14 +8,11 @@
 import SpriteKit
 import Foundation
 
-protocol Controller: class {
+protocol Controller: class, Configurable {
+    var texture: SKTexture! { get set }
     var view: View! { get set }
-    var parent: SKScene! { get set }
-    
-    func configProperties()
-    func configPhysics()
-    func configActions()
-    func configOnContact()
+    var initialPosition: CGPoint! { get set }
+    weak var parent: SKScene! { get set }
 }
 
 extension Controller {
@@ -38,9 +35,7 @@ extension Controller {
     func config() {
         configProperties()
         configPhysics()
-        configActions()
         configOnContact()
-        
-        parent.addChild(view)
+        configActions()
     }
 }

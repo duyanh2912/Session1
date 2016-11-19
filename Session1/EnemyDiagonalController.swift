@@ -43,7 +43,7 @@ class EnemyDiagonalController: EnemyController {
         
     }
     
-    override func flyAction() {
+    override func fly() {
         // Fly Action
         if isFromLeft {
             view.physicsBody?.velocity = CGVector(dx: SPEED * -sin(CGFloat.pi * -3 / 4), dy: SPEED * cos(CGFloat.pi * -3 / 4))
@@ -52,7 +52,7 @@ class EnemyDiagonalController: EnemyController {
         }
     }
     
-    override func shootAction() {
+    override func shoot() {
         // Shoot Action
         let shoot = SKAction.run { [unowned self] in
             let bulletController = EnemyDiagonalBulletController(planeController: self)

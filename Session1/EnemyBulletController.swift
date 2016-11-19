@@ -9,7 +9,8 @@
 import Foundation
 import SpriteKit
 
-class EnemyBulletController: BulletController {
+class EnemyBulletController: BulletController, CanTargetPlayer {
+    var initialPosition: CGPoint!
     var texture: SKTexture!
     var view: View!
     weak var parent: SKScene!
@@ -61,7 +62,7 @@ class EnemyBulletController: BulletController {
         view.physicsBody?.collisionBitMask = 0
     }
     
-    func configActions() {
+    func fly() {
         // Action
         if isTargetingPlayer {
             let action = SKAction.shootToTarget(
@@ -70,7 +71,7 @@ class EnemyBulletController: BulletController {
                 parent: parent,
                 speed: SPEED
             )
-            view.run(action)
+            view.run(.sequence([action, .removeFromParent()]))
         } else {
             view.physicsBody?.velocity = CGVector(dx: 0, dy: -SPEED)
         }
