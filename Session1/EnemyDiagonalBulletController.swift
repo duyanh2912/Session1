@@ -48,13 +48,12 @@ class EnemyDiagonalBulletController: EnemyBulletController {
     
     override func fly() {
         if isTargetingPlayer {
-            let action = SKAction.shootToTarget(
-                node: view,
-                target: (parent as! GameScene).playerController.view,
-                parent: parent,
-                speed: SPEED
-            )
-             view.run(.sequence([action, .removeFromParent()]))
+            let destination = PlayerController.sharedInstance.position
+            let distance = self.position.distance(to: destination)
+            var vector = CGVector(dx: destination.x - position.x, dy: destination.y - position.y)
+            vector.scale(by: SPEED / distance)
+            view.physicsBody?.velocity = vector
+            
         } else {
             switch isFromLeft {
             case true:

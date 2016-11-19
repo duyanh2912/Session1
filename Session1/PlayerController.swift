@@ -8,6 +8,8 @@
 import SpriteKit
 import Foundation
 class PlayerController: PlaneController, Shootable {
+    static let sharedInstance = PlayerController()
+    
     var texture: SKTexture!
     var view: View!
     var initialPosition: CGPoint!
@@ -31,16 +33,9 @@ class PlayerController: PlaneController, Shootable {
         }
     }
     
-    init(parent: SKScene) {
+    func set(parent: SKScene, customTexture: SKTexture? = nil) {
         self.parent = parent
-    }
-    
-    func set(customTexture: SKTexture?) {
-        if let playerTexture = customTexture {
-            texture = playerTexture
-        } else {
-            texture = Textures.plane4
-        }
+        texture = customTexture ?? Textures.plane3
     }
     
     func spawnPlayer() {
@@ -117,6 +112,10 @@ class PlayerController: PlaneController, Shootable {
     func powerup() {
         guard powerLevel < 3 else {
             (parent as? GameScene)?.score += 30
+            if hp < capHp {
+                hp += 1
+                view.childNode(withName: "fire")!.removeFromParent()
+            }
             return
         }
         powerLevel += 1
@@ -125,8 +124,8 @@ class PlayerController: PlaneController, Shootable {
     }
     
     func heal() {
-        guard self.hp < self.capHp else { return }
-        hp = capHp
+        guard self.hp < self.capHp - 1 else { return }
+        hp += 2
         while view.childNode(withName: "fire") != nil {
             view.childNode(withName: "fire")!.removeFromParent()
         }
@@ -171,6 +170,10 @@ class PlayerController: PlaneController, Shootable {
     
     func configActions() {
         shoot()
+    }
+    
+    func reset() {
+        self.hp = 10
     }
 }
 

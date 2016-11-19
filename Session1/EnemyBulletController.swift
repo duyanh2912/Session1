@@ -65,13 +65,12 @@ class EnemyBulletController: BulletController, CanTargetPlayer {
     func fly() {
         // Action
         if isTargetingPlayer {
-            let action = SKAction.shootToTarget(
-                node: view,
-                target: (parent as! GameScene).playerController.view,
-                parent: parent,
-                speed: SPEED
-            )
-            view.run(.sequence([action, .removeFromParent()]))
+            let destination = PlayerController.sharedInstance.position
+            let distance = self.position.distance(to: destination)
+            var vector = CGVector(dx: destination.x - position.x, dy: destination.y - position.y)
+            vector.scale(by: SPEED / distance)
+            view.physicsBody?.velocity = vector
+            
         } else {
             view.physicsBody?.velocity = CGVector(dx: 0, dy: -SPEED)
         }

@@ -15,9 +15,14 @@ class EnemyDiagonalController: EnemyController {
         super.init(parent: parent)
     }
     
-    func set(isFromLeft: Bool) {
-        self.isFromLeft = isFromLeft
-        if isFromLeft {
+    func set(isFromLeft: Bool?) {
+        if isFromLeft != nil {
+            self.isFromLeft = isFromLeft!
+        } else {
+            self.isFromLeft = arc4random_uniform(2) == 0
+        }
+        
+        if self.isFromLeft {
             super.set(customTexture: Textures.enemy_green_1)
         } else {
             super.set(customTexture: Textures.enemy_green_2)
@@ -31,10 +36,10 @@ class EnemyDiagonalController: EnemyController {
     override func configProperties() {
         let beginX: CGFloat
         if isFromLeft {
-            view = View(texture: SKTexture(image: #imageLiteral(resourceName: "enemy-green-1")))
+            view = View(texture: SKTexture(image: #imageLiteral(resourceName: "enemy_green_1")))
             beginX = -view.width / 2
         } else {
-            view = View(texture: SKTexture(image: #imageLiteral(resourceName: "enemy-green-2")))
+            view = View(texture: SKTexture(image: #imageLiteral(resourceName: "enemy_green_2")))
             beginX = parent.size.width + (view?.width)! / 2
         }
         let beginY = CGFloat(drand48()) * parent.size.height / 2 + parent.size.height / 2 + view.height / 2

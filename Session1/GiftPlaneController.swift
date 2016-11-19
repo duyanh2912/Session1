@@ -17,6 +17,7 @@ class GiftPlaneController: PlaneController {
     var SPEED: CGFloat! = 160
     
     func configProperties() {
+        view.setScale(0.5)
         view?.name = "gift_plane"
         
         let beginX = CGFloat(drand48() * Double(parent.frame.width)) / 2
@@ -74,11 +75,13 @@ class GiftPlaneController: PlaneController {
             controlPoint2: .init(x: 80 - 170, y: -229)
         )
         path.addCurve(
-            to: .init(x: 700 - 170, y: -439),
+            to: CGPoint(x: (parent.size.width + self.width / 2 - self.position.x), y: -439),
             controlPoint1: .init(x: 127 - 170, y: -449),
             controlPoint2: .init(x: 300 - 170, y: -439)
         )
-        view.run(.follow(path.cgPath, asOffset: true, orientToPath: true, speed: SPEED))
+        view.run(.follow(path.cgPath, asOffset: true, orientToPath: true, speed: SPEED)) { [weak view] in
+            view?.removeFromParent()
+        }
 //        view.physicsBody?.velocity = CGVector(dx: 0, dy: -SPEED)
     }
     

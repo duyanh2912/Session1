@@ -49,6 +49,13 @@ extension CGSize {
     }
 }
 
+extension CGVector {
+    mutating func scale(by ratio: CGFloat) {
+        self.dx = self.dx * ratio
+        self.dy = self.dy * ratio
+    }
+}
+
 extension SKAction {
     static func moveToTop(node: SKSpriteNode, parent: SKNode, speed: CGFloat) -> SKAction {
         let distance = abs(parent.frame.height + node.size.height / 2 - node.position.y)

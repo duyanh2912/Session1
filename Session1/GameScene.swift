@@ -39,7 +39,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     var playerController: PlayerController!
     var randomEnemyGenerator: RandomEnemyGenerator!
     var explosionController: ExplosionController!
-    var soundController: SoundController!
+    var soundController: SoundController = SoundController.sharedInstance
     
     var hpLabel: SKLabelNode!
     var hpLabelBlock: SKSpriteNode!
@@ -58,13 +58,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     
     deinit {
         print("bye Game Scene")
+        PlayerController.sharedInstance.reset()
     }
     
     override func willMove(from view: SKView) {
     }
     
     override func didMove(to view: SKView) {
-//        playMusic()
+        playMusic()
         addExplosionController()
         configPhysics()
         addBackground()
@@ -77,8 +78,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     
     func playMusic() {
         if let path = Bundle.main.url(forResource: "background", withExtension: "mp3") {
+            print("music")
             audioPlayer = try! AVAudioPlayer(contentsOf: path)
-            audioPlayer?.volume = 0.5
+            audioPlayer?.volume = 1
             audioPlayer?.play()
         }
     }
@@ -222,8 +224,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     }
     
     func addPlayer() {
-        playerController = PlayerController(parent: self)
-        playerController.set(customTexture: Textures.plane3)
+        playerController = PlayerController.sharedInstance
+        playerController.set(parent: self)
         playerController.FIRING_INTERVAL = 0.5
         playerController.spawnPlayer()
     }

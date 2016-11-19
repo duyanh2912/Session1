@@ -32,9 +32,9 @@ struct Textures {
     static let bullet_round = SKTexture(image: #imageLiteral(resourceName: "bullet-round"))
     static let bullet_double = SKTexture(image: #imageLiteral(resourceName: "bullet-double"))
     
-    static let enemy_green_1 = SKTexture(image: #imageLiteral(resourceName: "enemy-green-1"))
-    static let enemy_green_2 = SKTexture(image: #imageLiteral(resourceName: "enemy-green-2"))
-    static let enemy_green_3 = SKTexture(image: #imageLiteral(resourceName: "enemy-green-3"))
+    static let enemy_green_1 = SKTexture(image: #imageLiteral(resourceName: "enemy_green_1"))
+    static let enemy_green_2 = SKTexture(image: #imageLiteral(resourceName: "enemy_green_2"))
+    static let enemy_green_3 = SKTexture(image: #imageLiteral(resourceName: "enemy_green_3"))
     static let plane1 = SKTexture(image: #imageLiteral(resourceName: "plane1"))
     
     static let plane2 = SKTexture(imageNamed: "player_image/plane2")
@@ -48,9 +48,9 @@ struct Textures {
 enum EnemyType: String {
     case enemy_plane_white_animated = "enemy_plane_white"
     case enemy_plane_yellow_animated = "enemy_plane_yellow"
-    case enemy_green_3 = "enemy-green-3"
-    case enemy_green_2 = "enemy-green-2"
-    case enemy_green_1 = "enemy-green-1"
+    case enemy_green_3 = "enemy_green_3"
+    case enemy_green_2 = "enemy_green_2"
+    case enemy_green_1 = "enemy_green_1"
     case plane1 = "plane1"
     
     static let types = [enemy_plane_white_animated,

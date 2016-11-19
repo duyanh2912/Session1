@@ -30,26 +30,21 @@ class RandomEnemyGenerator {
     
     func generate(interval: Double) {
         let add = SKAction.run { [unowned self] in
-            let i = Int(arc4random_uniform(UInt32(EnemyType.types.count)))
             var enemyController: PlaneController
-            switch EnemyType.types[i] {
-                
-            case EnemyType.enemy_green_1:
-                enemyController = EnemyDiagonalController(parent: self.parent)
-                (enemyController as! EnemyDiagonalController).set(isFromLeft: true)
-                
-            case EnemyType.enemy_green_2:
-                enemyController = EnemyDiagonalController(parent: self.parent)
-                (enemyController as! EnemyDiagonalController).set(isFromLeft: false)
-                
-            case EnemyType.enemy_plane_white_animated, EnemyType.enemy_plane_yellow_animated:
-                enemyController = EnemyAnimatedController(parent: self.parent)
-                (enemyController as! EnemyAnimatedController).set(customAnimation: EnemyType.types[i].rawValue)
             
-            case EnemyType.enemy_green_3:
+            switch arc4random_uniform(10) {
+            case 0...2:
                 enemyController = EnemyController(parent: self.parent)
                 (enemyController as! EnemyController).set(customTexture: nil)
-                
+            
+            case 3...5:
+                enemyController = EnemyDiagonalController(parent: self.parent)
+                (enemyController as! EnemyDiagonalController).set(isFromLeft: nil)
+            
+            case 6...8:
+                enemyController = EnemyAnimatedController(parent: self.parent)
+                (enemyController as! EnemyAnimatedController).set(customAnimation: nil)
+            
             default:
                 enemyController = GiftPlaneController(parent: self.parent)
                 (enemyController as! GiftPlaneController).set(customTexture: nil)

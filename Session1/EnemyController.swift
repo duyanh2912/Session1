@@ -9,6 +9,8 @@ import SpriteKit
 import Foundation
 
 class EnemyController: PlaneController, Shootable, CanTargetPlayer {
+    var option = [Textures.enemy_green_3, Textures.plane1]
+    
     var texture: SKTexture!
     var view: View!
     var initialPosition: CGPoint!
@@ -47,7 +49,7 @@ class EnemyController: PlaneController, Shootable, CanTargetPlayer {
         if customTexture != nil {
             texture = customTexture!
         } else {
-            texture = Textures.enemy_green_3
+            texture = option[Int(arc4random_uniform(UInt32(option.count)))]
         }
     }
     

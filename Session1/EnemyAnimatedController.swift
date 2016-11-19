@@ -8,12 +8,18 @@
 import SpriteKit
 import Foundation
 class EnemyAnimatedController: EnemyController, Animated {
+    var animatedOption: [String] {
+        get {
+            return ["enemy_plane_white", "enemy_plane_yellow", "enemy_green"]
+        }
+    }
+    
     var textures = [SKTexture]()
     var atlas: SKTextureAtlas!
     
     func set(customAnimation: String?) {
         if customAnimation == nil {
-            atlas = SKTextureAtlas(named: "enemy_plane_white")
+            atlas = SKTextureAtlas(named: animatedOption[Int(arc4random_uniform(UInt32(animatedOption.count)))])
         } else {
             atlas = SKTextureAtlas(named: customAnimation!)
         }
