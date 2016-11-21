@@ -27,9 +27,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
             hardcoreLabelBlock.size = hardcoreLabel.frame.size.add(dWidth: 6, dHeight: 6)
             
             if hardcoreMode == true {
-                LuckRate.powerup *= 2
-            } else {
                 LuckRate.powerup /= 2
+            } else {
+                LuckRate.powerup *= 2
             }
         }
     }
@@ -58,6 +58,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     
     deinit {
         print("bye Game Scene")
+        if hardcoreMode {
+            LuckRate.powerup *= 2
+        }
+        
         PlayerController.sharedInstance.reset()
     }
     
@@ -86,7 +90,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     }
     
     func addExplosionController() {
-        explosionController = ExplosionController(parent: self)
+        explosionController = ExplosionController.sharedInstance
+        explosionController.set(parent: self)
     }
     
     func addHardcoreLabel() {
@@ -214,8 +219,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
         self.physicsWorld.contactDelegate = self
         
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame.insetBy(
-            dx: size.width * -0.2,
-            dy: size.height * -0.2)
+            dx: size.width * -0.15,
+            dy: size.height * -0.15)
         )
         self.physicsBody?.categoryBitMask = BitMask.wall.rawValue
         self.physicsBody?.collisionBitMask = 0
@@ -226,7 +231,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, OnContact {
     func addPlayer() {
         playerController = PlayerController.sharedInstance
         playerController.set(parent: self)
-        playerController.FIRING_INTERVAL = 0.5
         playerController.spawnPlayer()
     }
     

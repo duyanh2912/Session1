@@ -16,9 +16,13 @@ class PowerupController: BoosterController {
     
     var SPEED: CGFloat! = 120
     
+    deinit {
+        print("bye Powerup")
+    }
+    
     init(parent: SKScene) {
         self.parent = parent
-        print("hello Powerup C")
+        print("hello Powerup")
     }
     
     func set(position: CGPoint, customSpeed: CGFloat?) {
@@ -32,16 +36,17 @@ class PowerupController: BoosterController {
         view = View(texture: texture)
         view.setScale(0.25)
         config()
-        parent.addChild(self.view)
+        parent.addChild(view)
     }
     
     func configProperties() {
-        view.position = self.initialPosition
+        view.position = initialPosition
         view.name = "booster_powerup"
     }
     
     func configPhysics() {
         view.physicsBody = SKPhysicsBody(texture: view.texture!, size: view.size)
+        view.physicsBody?.linearDamping = 0
         view.physicsBody?.categoryBitMask = BitMask.powerup.rawValue
         view.physicsBody?.collisionBitMask = 0
         view.physicsBody?.contactTestBitMask = BitMask.player.rawValue | BitMask.wall.rawValue
@@ -52,10 +57,8 @@ class PowerupController: BoosterController {
     }
     
     func configOnContact() {
-        if let view = self.view {
-            view.onContact = { [unowned view] other in
-                view.removeFromParent()
-            }
+        view.onContact = { [unowned view = self.view!] other in
+            view.removeFromParent()
         }
     }
 }

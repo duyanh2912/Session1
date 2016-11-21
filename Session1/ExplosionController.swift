@@ -8,6 +8,8 @@
 import SpriteKit
 import Foundation
 class ExplosionController: Controller, Animated {
+    static let sharedInstance = ExplosionController()
+    
     var texture: SKTexture!
     var view: View!
     var initialPosition: CGPoint!
@@ -18,13 +20,15 @@ class ExplosionController: Controller, Animated {
     let time: Double = 0.5
     weak var plane: View!
     
-    init(parent: SKScene) {
-        self.parent = parent
-        
+    init() {
         let textureNamesSorted = atlas.textureNames.sorted()
         for textureName in textureNamesSorted {
             textures.append(atlas.textureNamed(textureName))
         }
+    }
+    
+    func set(parent: SKScene) {
+        self.parent = parent
     }
     
     func explode(at plane: View, scale: CGFloat = 1) {

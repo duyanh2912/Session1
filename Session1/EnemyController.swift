@@ -55,8 +55,9 @@ class EnemyController: PlaneController, Shootable, CanTargetPlayer {
     
     func spawn() {
         view = View(texture: texture)
-        config()
         parent.addChild(view)
+        config()
+        
     }
     
     func configPhysics() {
@@ -88,18 +89,19 @@ class EnemyController: PlaneController, Shootable, CanTargetPlayer {
     }
     
     func configOnContact() {
-        self.view.onContact = { [unowned self] (other, contact) in
+        let parent = self.parent!
+        
+        view.onContact = { [unowned self, unowned parent] (other, contact) in
             if (other as? SKNode)?.physicsBody?.categoryBitMask != BitMask.wall.rawValue {
-                let scene = self.parent as! GameScene
-                scene.explosionController.explode(at: self.view)
-                scene.score += 10
+                (self.parent as? GameScene)?.score += 10
+                ExplosionController.sharedInstance.explode(at: self.view)
                 
                 let position = self.position
                 // Randomize
-                DispatchQueue.global().async { [unowned scene] in
+                DispatchQueue.global().async { [unowned parent] in
                     if arc4random_uniform(UInt32(LuckRate.powerup)) == 0 {
                         print(LuckRate.powerup)
-                        let powerupController = PowerupController(parent: scene)
+                        let powerupController = PowerupController(parent: parent)
                         powerupController.set(position: position, customSpeed: nil)
                         DispatchQueue.main.async {
                             powerupController.spawn()

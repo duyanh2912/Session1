@@ -24,12 +24,12 @@ class PlayerController: PlaneController, Shootable {
             scene?.hpLabelBlock.size = (scene?.hpLabel.frame.size.add(dWidth: 6, dHeight: 6))!
         }
     }
-    var FIRING_INTERVAL: Double! = 0.5
+    var FIRING_INTERVAL: Double! = 60 / 107
     var activeBulletControllers = [BulletController]()
     var powerLevel = 1 {
         didSet {
             view.removeAllActions()
-            self.configActions()
+            configActions()
         }
     }
     
@@ -78,7 +78,7 @@ class PlayerController: PlaneController, Shootable {
             addBullet = SKAction.run { [unowned self] in
                 let bulletController = PlayerMultipleBulletsController(planeController: self)
                 bulletController.set(customTexture: self.texture)
-                bulletController.spawnStraightBullet(scale: 0.25)
+                bulletController.spawnBullet(scale: 0.25)
             }
         }
         let delay = SKAction.wait(forDuration: self.FIRING_INTERVAL)
@@ -119,25 +119,24 @@ class PlayerController: PlaneController, Shootable {
             return
         }
         powerLevel += 1
-        FIRING_INTERVAL = FIRING_INTERVAL * 0.75
+        FIRING_INTERVAL = FIRING_INTERVAL / sqrt(2)
         self.parent.run(SoundController.POWERUP)
     }
     
     func heal() {
-        guard self.hp < self.capHp - 1 else { return }
-        hp += 2
-        while view.childNode(withName: "fire") != nil {
+        guard self.hp < self.capHp else { return }
+        let healAmount = min(capHp - hp, 2)
+        hp += healAmount
+        for _ in 0 ..< healAmount {
             view.childNode(withName: "fire")!.removeFromParent()
         }
     }
     
     func die() {
         self.view.removeFromParent()
-        (parent as? GameScene)?.audioPlayer?.stop()
-        let explosionController = (self.parent as! GameScene).explosionController!
-        explosionController.explode(at: (self.view)!)
+        ExplosionController.sharedInstance.explode(at: self.view)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + explosionController.time * 1.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + ExplosionController.sharedInstance.time * 1.2) {
             if let gameoverScene = SKScene(fileNamed: "GameoverScene") {
                 guard let scene = self.parent else { return }
                 gameoverScene.size = scene.size
@@ -174,6 +173,9 @@ class PlayerController: PlaneController, Shootable {
     
     func reset() {
         self.hp = 10
+        self.powerLevel = 1
+        self.FIRING_INTERVAL = 60 / 107
+        activeBulletControllers.removeAll()
     }
 }
 
