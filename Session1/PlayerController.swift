@@ -120,7 +120,7 @@ class PlayerController: PlaneController, Shootable {
         }
         powerLevel += 1
         FIRING_INTERVAL = FIRING_INTERVAL / sqrt(2)
-        self.parent.run(SoundController.POWERUP)
+        self.parent.run(SoundController.sharedInstance.POWERUP)
     }
     
     func heal() {
@@ -147,7 +147,7 @@ class PlayerController: PlaneController, Shootable {
     }
     
     func ignite(at contact: SKPhysicsContact) {
-        self.parent.run(SoundController.PLAYER_HIT)
+        self.parent.run(SoundController.sharedInstance.PLAYER_HIT)
         let emitter = SKEmitterNode(fileNamed: "Fire")
         emitter?.name = "fire"
         emitter?.position = contact.contactPoint.positionRelative(to: (self.view)!)

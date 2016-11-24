@@ -44,6 +44,6 @@ class PlayerBulletController: BulletController {
     func fly() {
         // Action
         view.physicsBody?.velocity = CGVector(dx: 0, dy: SPEED)
-        self.parent.run(SoundController.PLAYER_SHOOT)
+        self.parent.run(SoundController.sharedInstance.PLAYER_SHOOT)
     }
 }

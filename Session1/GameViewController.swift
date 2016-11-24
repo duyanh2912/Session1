@@ -20,7 +20,7 @@ class GameViewController: UIViewController {
             if let scene = SKScene(fileNamed: "GameScene") {
                 // Set the scale mode to scale to fit the window
                 if UIDevice.current.userInterfaceIdiom == .pad {
-                    scene.size = CGSize(width: scene.size.width, height: scene.size.width * 1024 / 768)
+                    scene.size = CGSize(width: scene.size.width, height: scene.size.width * 4 / 3)
                 }
                 
                 scene.scaleMode = .aspectFill

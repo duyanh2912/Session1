@@ -56,7 +56,7 @@ class ExplosionController: Controller, Animated {
             timePerFrame: time / Double(textures.count)
         )
         view.run(.sequence([animate, .removeFromParent()]))
-        self.parent.run(SoundController.EXPLOSION)
+        self.parent.run(SoundController.sharedInstance.EXPLOSION)
     }
 
     func configOnContact() {}

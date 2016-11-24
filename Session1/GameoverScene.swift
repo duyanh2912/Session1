@@ -17,7 +17,7 @@ class GameoverScene: SKScene {
     
     override func didMove(to view: SKView) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [unowned self] in
-             self.run(SoundController.GAME_OVER)
+             self.run(SoundController.sharedInstance.GAME_OVER)
         }
        
         let gameoverLabel = childNode(withName: "gameoverLabel") as! SKLabelNode
@@ -46,6 +46,8 @@ class GameoverScene: SKScene {
         guard let location = touches.first?.location(in: self) else { return }
         if nodes(at: location).contains(replayLabel) {
             view?.presentScene(GameScene(size: size))
+        } else {
+            
         }
     }
 }

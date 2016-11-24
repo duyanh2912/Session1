@@ -47,7 +47,7 @@ class PlayerMultipleBulletsController: PlayerBulletController {
         for view in views {
             parent.addChild(view)
         }
-        self.parent.run(SoundController.PLAYER_SHOOT)
+        self.parent.run(SoundController.sharedInstance.PLAYER_SHOOT)
     }
     
     override func configProperties() {

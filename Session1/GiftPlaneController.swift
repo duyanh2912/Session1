@@ -86,10 +86,7 @@ class GiftPlaneController: PlaneController {
     }
     
     func configOnContact() {
-        let plane = self.view!
-        let parent = self.parent!
-        
-        plane.onContact = { [unowned plane, unowned parent] (other, _) in
+        view.onContact = { [unowned plane = self.view!, unowned parent = self.parent!] (other, _) in
             if (other as? SKNode)?.physicsBody?.categoryBitMask != BitMask.wall.rawValue {
                 (parent as? GameScene)?.explosionController.explode(at: plane)
                 

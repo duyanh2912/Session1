@@ -74,7 +74,7 @@ class EnemyBulletController: BulletController, CanTargetPlayer {
         } else {
             view.physicsBody?.velocity = CGVector(dx: 0, dy: -SPEED)
         }
-        self.parent.run(SoundController.ENEMY_SHOOT)
+        self.parent.run(SoundController.sharedInstance.ENEMY_SHOOT)
     }
 }
 
